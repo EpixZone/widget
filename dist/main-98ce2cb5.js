@@ -120341,7 +120341,7 @@ const emptyIcon = {
   class: "btn btn-sm m-1 lowercase"
 }, _hoisted_4 = {
   tabindex: "0",
-  class: "dropdown-content menu shadow p-2 bg-base-100 rounded w-64 overflow-auto"
+  class: "dropdown-content menu shadow-modern p-2 modern-card rounded-lg w-64 overflow-auto"
 }, _hoisted_5$1 = { class: "px-2 mb-1 text-gray-500 dark:text-gray-400 font-semibold flex justify-between" }, _hoisted_6$1 = { class: "text-lg" }, _hoisted_7$1 = { class: "ml-2 text-xs mt-2" }, _hoisted_8$1 = { class: "" }, _hoisted_9$1 = /* @__PURE__ */ createBaseVNode("div", { class: "divider mt-1 mb-1" }, null, -1), _hoisted_10$1 = { class: "toast" }, _hoisted_11$1 = { class: "alert alert-success" }, _hoisted_12$1 = { class: "text-sm" }, _hoisted_13$1 = { class: "toast" }, _hoisted_14$1 = { class: "alert alert-error" }, _hoisted_15$1 = { class: "text-sm" }, _hoisted_16$1 = {
   key: 1,
   for: "PingConnectWallet",
@@ -120350,14 +120350,14 @@ const emptyIcon = {
   for: "PingConnectWallet",
   class: "modal cursor-pointer z-[999999]"
 }, _hoisted_18$1 = {
-  class: "modal-box rounded-lg",
+  class: "modal-box modern-card rounded-xl shadow-modern",
   for: ""
-}, _hoisted_19$1 = /* @__PURE__ */ createBaseVNode("h3", { class: "text-xl font-semibold" }, "Connect Wallet", -1), _hoisted_20$1 = {
+}, _hoisted_19$1 = /* @__PURE__ */ createBaseVNode("h3", { class: "text-xl font-semibold gradient-text" }, "Connect Wallet", -1), _hoisted_20$1 = {
   role: "list",
-  class: "bg-gray-100 dark:bg-gray-900 rounded-lg mt-4 px-3 py-3"
+  class: "bg-gray-100 dark:bg-epix-gray rounded-lg mt-4 px-3 py-3"
 }, _hoisted_21$1 = ["onClick"], _hoisted_22$1 = ["src"], _hoisted_23$1 = { class: "text-base font-semibold flex-1 dark:text-gray-300" }, _hoisted_24$1 = {
   key: 0,
-  class: "mr-4 rounded-full bg-green-200"
+  class: "mr-4 rounded-full bg-epix-accent/20"
 }, _hoisted_25$1 = { class: "text-error mt-3" }, _hoisted_26$1 = ["href"], _hoisted_27$1 = { class: "mt-8 text-right flex" }, _hoisted_28$1 = {
   key: 0,
   class: "loading loading-spinner"
@@ -120474,12 +120474,12 @@ const emptyIcon = {
             createBaseVNode("div", _hoisted_8$1, [
               _hoisted_9$1,
               createBaseVNode("a", {
-                class: "block py-2 px-2 hover:bg-gray-100 dark:hover:bg-[#353f5a] rounded cursor-pointer",
+                class: "block py-2 px-2 hover:bg-gray-100 dark:hover:bg-epix-gray rounded cursor-pointer hover-lift",
                 style: { "overflow-wrap": "anywhere" },
                 onClick: ae[0] || (ae[0] = (ne) => $(Y.value.cosmosAddress))
               }, toDisplayString(Y.value.cosmosAddress), 1),
               createBaseVNode("a", {
-                class: "block py-2 px-2 hover:bg-gray-100 dark:hover:bg-[#353f5a] rounded cursor-pointer",
+                class: "block py-2 px-2 hover:bg-gray-100 dark:hover:bg-epix-gray rounded cursor-pointer hover-lift",
                 onClick: ae[1] || (ae[1] = (ne) => g())
               }, "Disconnect")
             ])
@@ -120518,7 +120518,7 @@ const emptyIcon = {
             _hoisted_19$1,
             createBaseVNode("ul", _hoisted_20$1, [
               (openBlock(!0), createElementBlock(Fragment, null, renderList(J.value, (ne, ee) => (openBlock(), createElementBlock("li", {
-                class: "flex items-center px-2 py-3 hover:bg-gray-200 dark:hover:bg-gray-800 rounded-lg cursor-pointer",
+                class: "flex items-center px-2 py-3 hover:bg-gray-200 dark:hover:bg-epix-gray-light rounded-lg cursor-pointer hover-lift transition-all duration-200",
                 key: ee,
                 onClick: (ie) => j(ne.wallet)
               }, [
@@ -120532,7 +120532,7 @@ const emptyIcon = {
                   ne.wallet === m.value ? (openBlock(), createElementBlock("div", _hoisted_24$1, [
                     createVNode(unref(Icon), {
                       icon: "mdi:check",
-                      class: "font-bold text-green-600"
+                      class: "font-bold text-epix-primary"
                     })
                   ])) : createCommentVNode("", !0)
                 ])
@@ -120553,13 +120553,13 @@ const emptyIcon = {
             ]),
             createBaseVNode("div", _hoisted_27$1, [
               createBaseVNode("label", {
-                class: "btn mr-1",
+                class: "modern-button-secondary mr-3 hover-lift",
                 onClick: L
               }, [
                 createVNode(unref(Icon), { icon: "mdi:cog-outline" })
               ]),
               createBaseVNode("label", {
-                class: "btn btn-primary ping-connect-confirm grow",
+                class: "modern-button ping-connect-confirm grow hover-lift",
                 onClick: ae[4] || (ae[4] = (ne) => q())
               }, [
                 d.value ? (openBlock(), createElementBlock("span", _hoisted_28$1)) : createCommentVNode("", !0),
@@ -258299,7 +258299,7 @@ const _334 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty
     },
     osmosis: {
       concentratedliquidity: {
-        v1beta1: new (await import("./query.lcd-0341956c.js")).LCDQueryClient({
+        v1beta1: new (await import("./query.lcd-b41836c4.js")).LCDQueryClient({
           requestClient: n
         })
       },
@@ -258424,7 +258424,7 @@ const _334 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty
     },
     osmosis: {
       concentratedliquidity: {
-        v1beta1: (await import("./query.rpc.Query-eacafd4c.js")).createRpcQueryExtension(o)
+        v1beta1: (await import("./query.rpc.Query-0f2184de.js")).createRpcQueryExtension(o)
       },
       cosmwasmpool: {
         v1beta1: (await Promise.resolve().then(() => _307)).createRpcQueryExtension(o)
@@ -258500,7 +258500,7 @@ const _334 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty
   },
   osmosis: {
     concentratedliquidity: {
-      v1beta1: new (await import("./tx.rpc.msg-8163d765.js")).MsgClientImpl(e)
+      v1beta1: new (await import("./tx.rpc.msg-c3fa4b29.js")).MsgClientImpl(e)
     },
     gamm: {
       poolmodels: {
@@ -263353,18 +263353,18 @@ const tokens = [
   for: "PingTokenConvert",
   class: "modal cursor-pointer"
 }, _hoisted_2 = {
-  class: "modal-box dark:bg-[#2a2a3a] rounded-lg",
+  class: "modal-box modern-card rounded-xl shadow-modern",
   for: ""
-}, _hoisted_3 = /* @__PURE__ */ createStaticVNode('<div class="absolute right-4 top-4 dropdown dropdown-end dropdown-hover"><label tabindex="0" class="text-info"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="w-6 h-6 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></label><div tabindex="0" class="card compact dropdown-content dark:bg-info-content bg-slate-300 shadow rounded-box w-64 z-40"><div class="card-body"><ul class="text-right"><li>Liquidity is provided by Osmosis</li><li>Powered by Ping.pub</li></ul></div></div></div><h3 class="text-xl font-semibold">Token Convert</h3>', 2), _hoisted_5 = {
+}, _hoisted_3 = /* @__PURE__ */ createStaticVNode('<div class="absolute right-4 top-4 dropdown dropdown-end dropdown-hover"><label tabindex="0" class="text-epix-teal hover:text-epix-primary transition-colors duration-200"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="w-6 h-6 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></label><div tabindex="0" class="card compact dropdown-content modern-card shadow-modern rounded-lg w-64 z-40"><div class="card-body"><ul class="text-right text-sm"><li>Liquidity is provided by Osmosis</li><li>Powered by Ping.pub</li></ul></div></div></div><h3 class="text-xl font-semibold gradient-text">Token Convert</h3>', 2), _hoisted_5 = {
   key: 0,
   class: "text-error mt-3"
-}, _hoisted_6 = { class: "flex items-center relative h-14 bg-gray-100 dark:bg-[#232333] rounded-tl-lg rounded-tr-lg mt-4" }, _hoisted_7 = { class: "dropdown" }, _hoisted_8 = {
+}, _hoisted_6 = { class: "flex items-center relative h-14 bg-gray-100 dark:bg-epix-gray rounded-tl-lg rounded-tr-lg mt-4" }, _hoisted_7 = { class: "dropdown" }, _hoisted_8 = {
   tabindex: "0",
-  class: "flex items-center h-12 px-4 cursor-pointer"
+  class: "flex items-center h-12 px-4 cursor-pointer hover-lift transition-all duration-200"
 }, _hoisted_9 = ["src"], _hoisted_10 = { class: "text-lg font-semibold mr-2" }, _hoisted_11 = {
   tabindex: "0",
-  class: "dropdown-content shadow bg-base-100 rounded-lg w-64 z-40"
-}, _hoisted_12 = { class: "py-2" }, _hoisted_13 = ["onClick"], _hoisted_14 = ["src"], _hoisted_15 = { class: "flex-1 text-sm" }, _hoisted_16 = { class: "text-sm font-semibold text-gray-600" }, _hoisted_17 = { class: "flex items-center py-2 px-4 bg-gray-200 dark:bg-[#171721] rounded-bl-lg rounded-br-lg" }, _hoisted_18 = /* @__PURE__ */ createBaseVNode("div", { class: "mr-3 text-sm" }, "Balance:", -1), _hoisted_19 = { class: "text-base font-semibold" }, _hoisted_20 = { class: "flex items-center justify-center -mt-3 -mb-3" }, _hoisted_21 = { class: "flex items-center h-14 rounded-tl-lg rounded-tr-lg bg-gray-100 dark:bg-[#232333]" }, _hoisted_22 = { key: 0 }, _hoisted_23 = {
+  class: "dropdown-content shadow-modern modern-card rounded-lg w-64 z-40"
+}, _hoisted_12 = { class: "py-2" }, _hoisted_13 = ["onClick"], _hoisted_14 = ["src"], _hoisted_15 = { class: "flex-1 text-sm" }, _hoisted_16 = { class: "text-sm font-semibold text-gray-600 dark:text-gray-400" }, _hoisted_17 = { class: "flex items-center py-2 px-4 bg-gray-200 dark:bg-epix-gray-light rounded-bl-lg rounded-br-lg" }, _hoisted_18 = /* @__PURE__ */ createBaseVNode("div", { class: "mr-3 text-sm" }, "Balance:", -1), _hoisted_19 = { class: "text-base font-semibold" }, _hoisted_20 = { class: "flex items-center justify-center -mt-3 -mb-3" }, _hoisted_21 = { class: "flex items-center h-14 rounded-tl-lg rounded-tr-lg bg-gray-100 dark:bg-epix-gray" }, _hoisted_22 = { key: 0 }, _hoisted_23 = {
   key: 0,
   class: "text-red-500"
 }, _hoisted_24 = {
@@ -263372,17 +263372,17 @@ const tokens = [
   class: "dropdown"
 }, _hoisted_25 = {
   tabindex: "0",
-  class: "flex items-center h-12 px-4 cursor-pointer"
+  class: "flex items-center h-12 px-4 cursor-pointer hover-lift transition-all duration-200"
 }, _hoisted_26 = ["src"], _hoisted_27 = { class: "text-lg font-semibold mr-2" }, _hoisted_28 = {
   tabindex: "0",
-  class: "compact dropdown-content shadow bg-base-100 w-64 rounded-lg"
-}, _hoisted_29 = { class: "py-2 max-h-40 overflow-y-auto" }, _hoisted_30 = ["onClick"], _hoisted_31 = ["src"], _hoisted_32 = { class: "flex-1 text-sm" }, _hoisted_33 = { class: "text-sm font-semibold text-gray-600" }, _hoisted_34 = { class: "flex-1 w-0 text-xl text-right font-semibold text-gray-600 dark:text-gray-50 pr-4" }, _hoisted_35 = { class: "flex items-center py-2 px-4 bg-gray-200 dark:bg-[#171721] rounded-bl-lg rounded-br-lg" }, _hoisted_36 = /* @__PURE__ */ createBaseVNode("div", { class: "mr-3 text-sm dark:text-gray-400" }, " Balance: ", -1), _hoisted_37 = { class: "text-base font-semibold dark:text-gray-200" }, _hoisted_38 = { class: "px-4 mt-4" }, _hoisted_39 = { class: "flex items-center justify-between" }, _hoisted_40 = /* @__PURE__ */ createBaseVNode("div", { class: "text-sm text-gray-600 dark:text-gray-400" }, " Swap Fee ", -1), _hoisted_41 = { class: "text-base text-gray-800 dark:text-gray-200" }, _hoisted_42 = {
+  class: "compact dropdown-content shadow-modern modern-card w-64 rounded-lg"
+}, _hoisted_29 = { class: "py-2 max-h-40 overflow-y-auto" }, _hoisted_30 = ["onClick"], _hoisted_31 = ["src"], _hoisted_32 = { class: "flex-1 text-sm" }, _hoisted_33 = { class: "text-sm font-semibold text-gray-600 dark:text-gray-400" }, _hoisted_34 = { class: "flex-1 w-0 text-xl text-right font-semibold text-gray-600 dark:text-gray-50 pr-4" }, _hoisted_35 = { class: "flex items-center py-2 px-4 bg-gray-200 dark:bg-epix-gray-light rounded-bl-lg rounded-br-lg" }, _hoisted_36 = /* @__PURE__ */ createBaseVNode("div", { class: "mr-3 text-sm dark:text-gray-400" }, " Balance: ", -1), _hoisted_37 = { class: "text-base font-semibold dark:text-gray-200" }, _hoisted_38 = { class: "px-4 mt-4" }, _hoisted_39 = { class: "flex items-center justify-between" }, _hoisted_40 = /* @__PURE__ */ createBaseVNode("div", { class: "text-sm text-gray-600 dark:text-gray-400" }, " Swap Fee ", -1), _hoisted_41 = { class: "text-base text-gray-800 dark:text-gray-200" }, _hoisted_42 = {
   key: 1,
   class: "text-error mt-3"
 }, _hoisted_43 = { class: "mt-5" }, _hoisted_44 = ["disabled"], _hoisted_45 = {
   key: 0,
   class: "loading loading-spinner"
-}, _hoisted_46 = { class: "text-xl font-semibold flex" }, _hoisted_47 = { class: "form-control" }, _hoisted_48 = { class: "label" }, _hoisted_49 = /* @__PURE__ */ createBaseVNode("span", { class: "label-text" }, "Deposit assets into Osmosis:", -1), _hoisted_50 = { class: "lable-text" }, _hoisted_51 = ["value"], _hoisted_52 = { class: "flex items-center relative h-14 bg-gray-100 dark:bg-[#232333] rounded-tl-lg rounded-tr-lg mt-4" }, _hoisted_53 = {
+}, _hoisted_46 = { class: "text-xl font-semibold flex gradient-text" }, _hoisted_47 = { class: "form-control" }, _hoisted_48 = { class: "label" }, _hoisted_49 = /* @__PURE__ */ createBaseVNode("span", { class: "label-text" }, "Deposit assets into Osmosis:", -1), _hoisted_50 = { class: "lable-text" }, _hoisted_51 = ["value"], _hoisted_52 = { class: "flex items-center relative h-14 bg-gray-100 dark:bg-[#232333] rounded-tl-lg rounded-tr-lg mt-4" }, _hoisted_53 = {
   tabindex: "0",
   class: "flex items-center h-12 px-4 cursor-pointer"
 }, _hoisted_54 = ["src"], _hoisted_55 = { class: "text-lg font-semibold mr-2" }, _hoisted_56 = { class: "flex flex-row-reverse items-center py-2 px-4 bg-gray-200 dark:bg-[#171721] rounded-bl-lg rounded-br-lg" }, _hoisted_57 = { class: "text-base font-semibold" }, _hoisted_58 = /* @__PURE__ */ createBaseVNode("div", { class: "mr-3 text-sm" }, "Balance:", -1), _hoisted_59 = {
@@ -263926,14 +263926,14 @@ const tokens = [
                     createBaseVNode("div", _hoisted_10, toDisplayString((fe = ae.value) == null ? void 0 : fe.symbol), 1),
                     createVNode(unref(Icon), {
                       icon: "mdi:chevron-down",
-                      class: "text-lg"
+                      class: "text-lg text-epix-primary"
                     })
                   ]),
                   createBaseVNode("div", _hoisted_11, [
                     createBaseVNode("div", _hoisted_12, [
                       (openBlock(!0), createElementBlock(Fragment, null, renderList(v.value, (vo, Ar) => (openBlock(), createElementBlock("div", {
                         key: Ar,
-                        class: "flex items-center px-4 py-2 hover:bg-gray-200 dark:hover:bg-[#232333] cursor-pointer",
+                        class: "flex items-center px-4 py-2 hover:bg-gray-200 dark:hover:bg-epix-gray-light cursor-pointer hover-lift transition-all duration-200",
                         onClick: (Dr) => de(vo)
                       }, [
                         createBaseVNode("img", {
@@ -263953,7 +263953,7 @@ const tokens = [
                   "onUpdate:modelValue": Yt[2] || (Yt[2] = (vo) => W.value = vo),
                   type: "number",
                   placeholder: "1",
-                  class: "input bg-transparent flex-1 h-14 text-right text-lg font-bold"
+                  class: "input bg-transparent flex-1 h-14 text-right text-lg font-bold focus:outline-none"
                 }, null, 512), [
                   [vModelText, W.value]
                 ])
@@ -263964,19 +263964,18 @@ const tokens = [
                 T.value ? (openBlock(), createBlock(unref(Icon), {
                   key: 0,
                   icon: "mdi:plus-box-outline",
-                  class: "ml-2 cursor-pointer",
+                  class: "ml-2 cursor-pointer text-epix-primary hover:text-epix-accent transition-colors duration-200",
                   onClick: Yt[3] || (Yt[3] = (vo) => M("deposit"))
                 })) : createCommentVNode("", !0)
               ]),
               createBaseVNode("div", _hoisted_20, [
                 createBaseVNode("div", {
-                  class: "inline-block px-4 cursor-pointer",
+                  class: "inline-block px-4 cursor-pointer hover-lift",
                   onClick: Pe
                 }, [
                   createVNode(unref(Icon), {
                     icon: "mdi:arrow-down-circle",
-                    color: "#676cf6",
-                    class: "text-4xl dark:bg-gray-50 rounded-full origin-center duration-300 transform hover:rotate-180"
+                    class: "text-4xl text-epix-primary bg-white dark:bg-epix-dark rounded-full origin-center duration-300 transform hover:rotate-180 shadow-modern"
                   })
                 ])
               ]),
@@ -263984,7 +263983,7 @@ const tokens = [
                 N.value.length === 0 ? (openBlock(), createElementBlock("div", _hoisted_22, [
                   j.value ? (openBlock(), createElementBlock("span", _hoisted_23, "No tradable tokens found.")) : (openBlock(), createElementBlock("button", {
                     key: 1,
-                    class: normalizeClass(["btn btn-ghost", { "loading relative start-0": J.value }])
+                    class: normalizeClass(["modern-button-secondary", { "loading relative start-0": J.value }])
                   }, " loading... ", 2))
                 ])) : createCommentVNode("", !0),
                 N.value && N.value.length > 0 ? (openBlock(), createElementBlock("div", _hoisted_24, [
@@ -263996,7 +263995,7 @@ const tokens = [
                     createBaseVNode("div", _hoisted_27, toDisplayString((Zt = E.value) == null ? void 0 : Zt.symbol), 1),
                     createVNode(unref(Icon), {
                       icon: "mdi:chevron-down",
-                      class: "text-lg"
+                      class: "text-lg text-epix-primary"
                     })
                   ]),
                   createBaseVNode("div", _hoisted_28, [
@@ -264004,7 +264003,7 @@ const tokens = [
                       (openBlock(!0), createElementBlock(Fragment, null, renderList(N.value, (vo, Ar) => (openBlock(), createElementBlock("div", {
                         key: Ar,
                         onClick: (Dr) => Ae(vo),
-                        class: "flex items-center px-4 py-2 max-h-36 overflow-y-auto hover:bg-gray-200 dark:hover:bg-[#232333] cursor-pointer"
+                        class: "flex items-center px-4 py-2 max-h-36 overflow-y-auto hover:bg-gray-200 dark:hover:bg-epix-gray-light cursor-pointer hover-lift transition-all duration-200"
                       }, [
                         createBaseVNode("img", {
                           class: "w-7 h-7 rounded-full mr-2",
@@ -264030,7 +264029,7 @@ const tokens = [
                 w.value ? (openBlock(), createBlock(unref(Icon), {
                   key: 0,
                   icon: "mdi:minus-box-outline",
-                  class: "ml-2 cursor-pointer",
+                  class: "ml-2 cursor-pointer text-epix-primary hover:text-epix-accent transition-colors duration-200",
                   onClick: Yt[4] || (Yt[4] = (vo) => M("withdraw"))
                 })) : createCommentVNode("", !0)
               ]),
@@ -264045,7 +264044,7 @@ const tokens = [
               ])) : createCommentVNode("", !0),
               createBaseVNode("div", _hoisted_43, [
                 createBaseVNode("button", {
-                  class: "btn btn-primary w-full ping-connect-confirm capitalize text-base",
+                  class: "modern-button w-full ping-connect-confirm capitalize text-base hover-lift",
                   disabled: Xe.value,
                   onClick: Lt
                 }, [
@@ -264059,7 +264058,7 @@ const tokens = [
             withDirectives(createBaseVNode("div", null, [
               createBaseVNode("h3", _hoisted_46, [
                 createVNode(unref(Icon), {
-                  class: "mt-1",
+                  class: "mt-1 text-epix-primary hover:text-epix-accent cursor-pointer transition-colors duration-200",
                   icon: "mdi:chevron-left",
                   onClick: Yt[5] || (Yt[5] = (vo) => M("swap"))
                 }),

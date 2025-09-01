@@ -1,7 +1,182 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-.input:focus {
+/* Widget-specific styles - scoped to avoid conflicts */
+ping-connect-wallet,
+ping-token-convert,
+ping-tx-dialog {
+    font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+        Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
+    font-size: 15px;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Widget-scoped CSS variables */
+ping-connect-wallet,
+ping-token-convert,
+ping-tx-dialog {
+    --text-main: #333;
+    --text-secondary: #4b525d;
+    --bg-active: #fbfbfc;
+    --epix-primary: #8a4bdb;
+    --epix-secondary: #5954cd;
+    --epix-accent: #69e9f5;
+    --epix-teal: #31bdc6;
+}
+
+html.dark ping-connect-wallet,
+html.dark ping-token-convert,
+html.dark ping-tx-dialog,
+html[data-theme='dark'] ping-connect-wallet,
+html[data-theme='dark'] ping-token-convert,
+html[data-theme='dark'] ping-tx-dialog {
+    --text-main: #ffffff;
+    --text-secondary: #a1a1aa;
+    --bg-active: #1a1a1a;
+    --epix-primary: #8a4bdb;
+    --epix-secondary: #5954cd;
+    --epix-accent: #69e9f5;
+    --epix-teal: #31bdc6;
+}
+
+/* Widget-scoped utility classes */
+ping-connect-wallet .glass-effect,
+ping-token-convert .glass-effect,
+ping-tx-dialog .glass-effect {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+html.dark ping-connect-wallet .glass-effect,
+html.dark ping-token-convert .glass-effect,
+html.dark ping-tx-dialog .glass-effect {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+ping-connect-wallet .gradient-text,
+ping-token-convert .gradient-text,
+ping-tx-dialog .gradient-text {
+    background: linear-gradient(
+        135deg,
+        var(--epix-primary),
+        var(--epix-accent)
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+ping-connect-wallet .modern-card,
+ping-token-convert .modern-card,
+ping-tx-dialog .modern-card {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 16px;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+html.dark ping-connect-wallet .modern-card,
+html.dark ping-token-convert .modern-card,
+html.dark ping-tx-dialog .modern-card {
+    background: rgba(26, 26, 26, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+ping-connect-wallet .modern-button,
+ping-token-convert .modern-button,
+ping-tx-dialog .modern-button {
+    background: linear-gradient(
+        135deg,
+        var(--epix-primary),
+        var(--epix-secondary)
+    );
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-weight: 600;
+    padding: 12px 24px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(138, 75, 219, 0.3);
+}
+
+ping-connect-wallet .modern-button:hover,
+ping-token-convert .modern-button:hover,
+ping-tx-dialog .modern-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(138, 75, 219, 0.4);
+}
+
+ping-connect-wallet .modern-button-secondary,
+ping-token-convert .modern-button-secondary,
+ping-tx-dialog .modern-button-secondary {
+    background: rgba(138, 75, 219, 0.1);
+    border: 1px solid rgba(138, 75, 219, 0.3);
+    border-radius: 12px;
+    color: var(--epix-primary);
+    font-weight: 600;
+    padding: 12px 24px;
+    transition: all 0.3s ease;
+}
+
+ping-connect-wallet .modern-button-secondary:hover,
+ping-token-convert .modern-button-secondary:hover,
+ping-tx-dialog .modern-button-secondary:hover {
+    background: rgba(138, 75, 219, 0.2);
+    transform: translateY(-1px);
+}
+
+ping-connect-wallet .hover-lift,
+ping-token-convert .hover-lift,
+ping-tx-dialog .hover-lift {
+    transition: transform 0.2s ease;
+}
+
+ping-connect-wallet .hover-lift:hover,
+ping-token-convert .hover-lift:hover,
+ping-tx-dialog .hover-lift:hover {
+    transform: translateY(-2px);
+}
+
+ping-connect-wallet .shadow-modern,
+ping-token-convert .shadow-modern,
+ping-tx-dialog .shadow-modern {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+html.dark ping-connect-wallet .shadow-modern,
+html.dark ping-token-convert .shadow-modern,
+html.dark ping-tx-dialog .shadow-modern {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3),
+        0 2px 4px -1px rgba(0, 0, 0, 0.2);
+}
+
+ping-connect-wallet .input:focus,
+ping-token-convert .input:focus,
+ping-tx-dialog .input:focus {
     outline: none;
+}
+
+/* Widget-scoped hyperlink styles */
+ping-connect-wallet a:not(.btn):not(.modern-button):not(.modern-button-secondary):not([class*='hover:bg-']):not([class*='rounded-']),
+ping-token-convert a:not(.btn):not(.modern-button):not(.modern-button-secondary):not([class*='hover:bg-']):not([class*='rounded-']),
+ping-tx-dialog a:not(.btn):not(.modern-button):not(.modern-button-secondary):not([class*='hover:bg-']):not([class*='rounded-']) {
+    color: var(--epix-teal);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+ping-connect-wallet a:not(.btn):not(.modern-button):not(.modern-button-secondary):not([class*='hover:bg-']):not([class*='rounded-']):hover,
+ping-token-convert a:not(.btn):not(.modern-button):not(.modern-button-secondary):not([class*='hover:bg-']):not([class*='rounded-']):hover,
+ping-tx-dialog a:not(.btn):not(.modern-button):not(.modern-button-secondary):not([class*='hover:bg-']):not([class*='rounded-']):hover {
+    color: var(--epix-primary);
 }

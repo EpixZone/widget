@@ -673,10 +673,10 @@ function fetchTx(tx: string) {
         <input v-model="open" type="checkbox" id="PingTokenConvert" class="modal-toggle" @change="initData()" />
 
         <label for="PingTokenConvert" class="modal cursor-pointer">
-            <label class="modal-box dark:bg-[#2a2a3a] rounded-lg" for="">
+            <label class="modal-box modern-card rounded-xl shadow-modern" for="">
                 <div v-show="view === 'swap'">
                     <div class="absolute right-4 top-4 dropdown dropdown-end dropdown-hover">
-                        <label tabindex="0" class="text-info">
+                        <label tabindex="0" class="text-epix-teal hover:text-epix-primary transition-colors duration-200">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                 class="w-6 h-6 stroke-current">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -684,41 +684,41 @@ function fetchTx(tx: string) {
                             </svg>
                         </label>
                         <div tabindex="0"
-                            class="card compact dropdown-content dark:bg-info-content bg-slate-300 shadow rounded-box w-64 z-40">
+                            class="card compact dropdown-content modern-card shadow-modern rounded-lg w-64 z-40">
                             <div class="card-body">
-                                <ul class="text-right">
+                                <ul class="text-right text-sm">
                                     <li>Liquidity is provided by Osmosis</li>
                                     <li>Powered by Ping.pub</li>
                                 </ul>
                             </div>
                         </div>
                     </div>
-                    <h3 class="text-xl font-semibold">Token Convert</h3>
+                    <h3 class="text-xl font-semibold gradient-text">Token Convert</h3>
                     <div v-if="!osmosisPath || chainName === 'osmosis'" class="text-error mt-3">
                         <span>This feature is not available [{{
                             chainName
                         }}]</span>
                     </div>
                     <div
-                        class="flex items-center relative h-14 bg-gray-100 dark:bg-[#232333] rounded-tl-lg rounded-tr-lg mt-4">
+                        class="flex items-center relative h-14 bg-gray-100 dark:bg-epix-gray rounded-tl-lg rounded-tr-lg mt-4">
                         <div class="dropdown">
-                            <label tabindex="0" class="flex items-center h-12 px-4 cursor-pointer">
+                            <label tabindex="0" class="flex items-center h-12 px-4 cursor-pointer hover-lift transition-all duration-200">
                                 <img :src="swapIn?.coinImageUrl" class="w-8 h-8 mr-3 rounded-full" />
                                 <div class="text-lg font-semibold mr-2">
                                     {{ swapIn?.symbol }}
                                 </div>
-                                <Icon icon="mdi:chevron-down" class="text-lg" />
+                                <Icon icon="mdi:chevron-down" class="text-lg text-epix-primary" />
                             </label>
-                            <div tabindex="0" class="dropdown-content shadow bg-base-100 rounded-lg w-64 z-40">
+                            <div tabindex="0" class="dropdown-content shadow-modern modern-card rounded-lg w-64 z-40">
                                 <div class="py-2">
                                     <div v-for="(item, index) in inTokens" :key="index"
-                                        class="flex items-center px-4 py-2 hover:bg-gray-200 dark:hover:bg-[#232333] cursor-pointer"
+                                        class="flex items-center px-4 py-2 hover:bg-gray-200 dark:hover:bg-epix-gray-light cursor-pointer hover-lift transition-all duration-200"
                                         @click="selectInput(item)">
                                         <img class="w-7 h-7 rounded-full mr-2" :src="item.coinImageUrl" />
                                         <div class="flex-1 text-sm">
                                             {{ item.symbol }}
                                         </div>
-                                        <div class="text-sm font-semibold text-gray-600">
+                                        <div class="text-sm font-semibold text-gray-600 dark:text-gray-400">
                                             {{
                                                 showBalance(
                                                     item.ibcDenom || item.denom,
@@ -731,52 +731,52 @@ function fetchTx(tx: string) {
                             </div>
                         </div>
                         <input v-model="amountIn" type="number" placeholder="1"
-                            class="input bg-transparent flex-1 h-14 text-right text-lg font-bold" />
+                            class="input bg-transparent flex-1 h-14 text-right text-lg font-bold focus:outline-none" />
                     </div>
 
-                    <div class="flex items-center py-2 px-4 bg-gray-200 dark:bg-[#171721] rounded-bl-lg rounded-br-lg">
+                    <div class="flex items-center py-2 px-4 bg-gray-200 dark:bg-epix-gray-light rounded-bl-lg rounded-br-lg">
                         <div class="mr-3 text-sm">Balance:</div>
                         <div class="text-base font-semibold">
                             {{
                                 showBalance(swapIn?.ibcDenom, swapIn?.decimals)
                             }}
                         </div>
-                        <Icon v-if="depositable" icon="mdi:plus-box-outline" class="ml-2 cursor-pointer"
+                        <Icon v-if="depositable" icon="mdi:plus-box-outline" class="ml-2 cursor-pointer text-epix-primary hover:text-epix-accent transition-colors duration-200"
                             @click="switchView('deposit')" />
                     </div>
 
                     <!-- switch btn -->
                     <div class="flex items-center justify-center -mt-3 -mb-3">
-                        <div class="inline-block px-4 cursor-pointer" @click="switchDirection">
-                            <Icon icon="mdi:arrow-down-circle" color="#676cf6"
-                                class="text-4xl dark:bg-gray-50 rounded-full origin-center duration-300 transform hover:rotate-180" />
+                        <div class="inline-block px-4 cursor-pointer hover-lift" @click="switchDirection">
+                            <Icon icon="mdi:arrow-down-circle"
+                                class="text-4xl text-epix-primary bg-white dark:bg-epix-dark rounded-full origin-center duration-300 transform hover:rotate-180 shadow-modern" />
                         </div>
                     </div>
 
-                    <div class="flex items-center h-14 rounded-tl-lg rounded-tr-lg bg-gray-100 dark:bg-[#232333]">
+                    <div class="flex items-center h-14 rounded-tl-lg rounded-tr-lg bg-gray-100 dark:bg-epix-gray">
                         <div v-if="outTokens.length === 0">
                             <span v-if="error" class="text-red-500">No tradable tokens found.</span>
-                            <button v-else class="btn btn-ghost" :class="{ 'loading relative start-0': sending }">
+                            <button v-else class="modern-button-secondary" :class="{ 'loading relative start-0': sending }">
                                 loading...
                             </button>
                         </div>
                         <div v-if="outTokens && outTokens.length > 0" class="dropdown">
-                            <label tabindex="0" class="flex items-center h-12 px-4 cursor-pointer">
+                            <label tabindex="0" class="flex items-center h-12 px-4 cursor-pointer hover-lift transition-all duration-200">
                                 <img :src="swapOut?.coinImageUrl" class="w-8 h-8 mr-3 rounded-full" />
                                 <div class="text-lg font-semibold mr-2">
                                     {{ swapOut?.symbol }}
                                 </div>
-                                <Icon icon="mdi:chevron-down" class="text-lg" />
+                                <Icon icon="mdi:chevron-down" class="text-lg text-epix-primary" />
                             </label>
-                            <div tabindex="0" class="compact dropdown-content shadow bg-base-100 w-64 rounded-lg">
+                            <div tabindex="0" class="compact dropdown-content shadow-modern modern-card w-64 rounded-lg">
                                 <div class="py-2 max-h-40 overflow-y-auto">
                                     <div v-for="(item, index) in outTokens" :key="index" @click="selectOutput(item)"
-                                        class="flex items-center px-4 py-2 max-h-36 overflow-y-auto hover:bg-gray-200 dark:hover:bg-[#232333] cursor-pointer">
+                                        class="flex items-center px-4 py-2 max-h-36 overflow-y-auto hover:bg-gray-200 dark:hover:bg-epix-gray-light cursor-pointer hover-lift transition-all duration-200">
                                         <img class="w-7 h-7 rounded-full mr-2" :src="item.coinImageUrl" />
                                         <div class="flex-1 text-sm">
                                             {{ item.symbol }}
                                         </div>
-                                        <div class="text-sm font-semibold text-gray-600">
+                                        <div class="text-sm font-semibold text-gray-600 dark:text-gray-400">
                                             {{
                                                 showBalance(
                                                     item.ibcDenom || item.denom,
@@ -793,7 +793,7 @@ function fetchTx(tx: string) {
                         </div>
                     </div>
 
-                    <div class="flex items-center py-2 px-4 bg-gray-200 dark:bg-[#171721] rounded-bl-lg rounded-br-lg">
+                    <div class="flex items-center py-2 px-4 bg-gray-200 dark:bg-epix-gray-light rounded-bl-lg rounded-br-lg">
                         <div class="mr-3 text-sm dark:text-gray-400">
                             Balance:
                         </div>
@@ -805,7 +805,7 @@ function fetchTx(tx: string) {
                                 )
                             }}
                         </div>
-                        <Icon v-if="withdrawable" icon="mdi:minus-box-outline" class="ml-2 cursor-pointer"
+                        <Icon v-if="withdrawable" icon="mdi:minus-box-outline" class="ml-2 cursor-pointer text-epix-primary hover:text-epix-accent transition-colors duration-200"
                             @click="switchView('withdraw')" />
                     </div>
 
@@ -827,7 +827,7 @@ function fetchTx(tx: string) {
                     </div>
 
                     <div class="mt-5">
-                        <button class="btn btn-primary w-full ping-connect-confirm capitalize text-base"
+                        <button class="modern-button w-full ping-connect-confirm capitalize text-base hover-lift"
                             :disabled="disabled" @click="doSwap">
                             <span v-if="sending" class="loading loading-spinner"></span>
                             Convert
@@ -836,8 +836,8 @@ function fetchTx(tx: string) {
                 </div>
                 <!-- deposit -->
                 <div v-show="view === 'deposit'">
-                    <h3 class="text-xl font-semibold flex">
-                        <Icon class="mt-1" icon="mdi:chevron-left" @click="switchView('swap')"></Icon>
+                    <h3 class="text-xl font-semibold flex gradient-text">
+                        <Icon class="mt-1 text-epix-primary hover:text-epix-accent cursor-pointer transition-colors duration-200" icon="mdi:chevron-left" @click="switchView('swap')"></Icon>
                         Deposit
                     </h3>
 
