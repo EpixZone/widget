@@ -379,7 +379,7 @@ async function doSwap() {
             address,
             [msg],
             fee,
-            'Token Convert from ping.pub'
+            ''
         );
         if (response.code === 0) {
             await showResult(response.transactionHash)
@@ -566,7 +566,7 @@ async function doWithdraw() {
             address,
             [msg],
             fee,
-            'Convert on ping.pub'
+            ''
         );
         if (response.code === 0) {
             await getBalance(

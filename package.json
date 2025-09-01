@@ -1,36 +1,44 @@
 {
-    "name": "@ping-pub/widget",
+    "name": "@epixzone/widget",
     "private": false,
     "version": "0.3.11",
     "type": "module",
     "main": "dist/widget.js",
     "author": {
-        "name": "Ping",
-        "email": "18786721@qq.com"
-    },  
+        "name": "EpixZone",
+        "email": "contact@epixzone.com"
+    },
     "publishConfig": {
         "access": "public"
     },
-    "homepage": "https://github.com/ping-pub/ping-widget",
+    "homepage": "https://github.com/EpixZone/widget",
     "repository": {
         "type": "git",
-        "url": "https://github.com/ping-pub/ping-widget"
+        "url": "https://github.com/EpixZone/widget"
     },
     "license": "MIT",
-    "description": "Ping widget",
+    "description": "EpixZone blockchain explorer widget",
     "keywords": [
         "vue3",
         "webcomponent",
         "widget",
         "explorer",
         "blockchain",
-        "Ping.pub"
+        "epix",
+        "epixzone"
+    ],
+    "files": [
+        "dist",
+        "lib",
+        "README.md",
+        "LICENSE"
     ],
     "scripts": {
         "dev": "vite",
         "serve": "vite",
         "build": "node --max_old_space_size=8192 ./node_modules/.bin/vite build",
         "preview": "vite preview",
+        "prepublishOnly": "npm run build",
         "trypublish": "npm publish || true"
     },
     "dependencies": {
