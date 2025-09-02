@@ -301,7 +301,7 @@ function fetchTx(tx: string) {
 
                 <div v-if="sender">
                     <div v-if="view === 'input'">
-                        <component :is="msgType" ref="msgBox" :endpoint="endpoint" :sender="sender" :balances="balance"
+                        <component :is="msgType" ref="msgBox" :key="props.type" :endpoint="endpoint" :sender="sender" :balances="balance"
                             :metadata="metadatas" :params="props.params" />
                         <form class="space-y-6" action="#" method="POST">
                             <div :class="advance ? '' : 'hidden'">
