@@ -120360,7 +120360,7 @@ const emptyIcon = {
   class: "mr-4 rounded-full bg-epix-accent/20"
 }, _hoisted_25$1 = { class: "text-error mt-3" }, _hoisted_26$1 = ["href"], _hoisted_27$1 = { class: "mt-8 text-right flex" }, _hoisted_28$1 = {
   key: 0,
-  class: "loading loading-spinner"
+  class: "loading loading-spinner mr-2"
 }, __default__$1 = {
   name: "ConnectWallet",
   components: { Icon }
@@ -120559,7 +120559,7 @@ const emptyIcon = {
                 createVNode(unref(Icon), { icon: "mdi:cog-outline" })
               ]),
               createBaseVNode("label", {
-                class: "modern-button ping-connect-confirm grow hover-lift",
+                class: "modern-button ping-connect-confirm grow hover-lift flex items-center justify-center",
                 onClick: ae[4] || (ae[4] = (ne) => q())
               }, [
                 d.value ? (openBlock(), createElementBlock("span", _hoisted_28$1)) : createCommentVNode("", !0),
@@ -258299,7 +258299,7 @@ const _334 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty
     },
     osmosis: {
       concentratedliquidity: {
-        v1beta1: new (await import("./query.lcd-0f1ae17d.js")).LCDQueryClient({
+        v1beta1: new (await import("./query.lcd-bb44f4b9.js")).LCDQueryClient({
           requestClient: n
         })
       },
@@ -258424,7 +258424,7 @@ const _334 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty
     },
     osmosis: {
       concentratedliquidity: {
-        v1beta1: (await import("./query.rpc.Query-3e0679d7.js")).createRpcQueryExtension(o)
+        v1beta1: (await import("./query.rpc.Query-70bc1f59.js")).createRpcQueryExtension(o)
       },
       cosmwasmpool: {
         v1beta1: (await Promise.resolve().then(() => _307)).createRpcQueryExtension(o)
@@ -258500,7 +258500,7 @@ const _334 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty
   },
   osmosis: {
     concentratedliquidity: {
-      v1beta1: new (await import("./tx.rpc.msg-e9b503d2.js")).MsgClientImpl(e)
+      v1beta1: new (await import("./tx.rpc.msg-854b4e6c.js")).MsgClientImpl(e)
     },
     gamm: {
       poolmodels: {
