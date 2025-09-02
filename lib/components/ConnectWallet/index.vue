@@ -243,8 +243,8 @@ const customKeplr = computed(() => {
                     <label class="modern-button-secondary mr-3 hover-lift" @click="keplr">
                         <Icon icon="mdi:cog-outline" />
                     </label>
-                    <label class="modern-button ping-connect-confirm grow hover-lift" @click="connect()">
-                        <span v-if="sending" class="loading loading-spinner"></span>
+                    <label class="modern-button ping-connect-confirm grow hover-lift flex items-center justify-center" @click="connect()">
+                        <span v-if="sending" class="loading loading-spinner mr-2"></span>
                         Connect
                     </label>
                 </div>

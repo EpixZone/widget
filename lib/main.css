@@ -180,3 +180,60 @@ ping-token-convert a:not(.btn):not(.modern-button):not(.modern-button-secondary)
 ping-tx-dialog a:not(.btn):not(.modern-button):not(.modern-button-secondary):not([class*='hover:bg-']):not([class*='rounded-']):hover {
     color: var(--epix-primary);
 }
+
+/* Transaction link styling */
+ping-connect-wallet .tx-link,
+ping-token-convert .tx-link,
+ping-tx-dialog .tx-link {
+    color: var(--epix-teal);
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+ping-connect-wallet .tx-link:hover,
+ping-token-convert .tx-link:hover,
+ping-tx-dialog .tx-link:hover {
+    color: var(--epix-primary);
+    text-decoration-color: var(--epix-primary);
+    transform: translateY(-1px);
+}
+
+/* Override Tailwind gray text classes to use CSS variables */
+ping-connect-wallet .text-gray-600,
+ping-token-convert .text-gray-600,
+ping-tx-dialog .text-gray-600 {
+    color: var(--text-main) !important;
+}
+
+ping-connect-wallet .text-gray-400,
+ping-token-convert .text-gray-400,
+ping-tx-dialog .text-gray-400 {
+    color: var(--text-secondary) !important;
+}
+
+ping-connect-wallet .text-gray-500,
+ping-token-convert .text-gray-500,
+ping-tx-dialog .text-gray-500 {
+    color: var(--text-secondary) !important;
+}
+
+ping-connect-wallet .text-gray-700,
+ping-token-convert .text-gray-700,
+ping-tx-dialog .text-gray-700 {
+    color: var(--text-main) !important;
+}
+
+ping-connect-wallet .text-gray-800,
+ping-token-convert .text-gray-800,
+ping-tx-dialog .text-gray-800 {
+    color: var(--text-main) !important;
+}
+
+ping-connect-wallet .text-gray-900,
+ping-token-convert .text-gray-900,
+ping-tx-dialog .text-gray-900 {
+    color: var(--text-main) !important;
+}

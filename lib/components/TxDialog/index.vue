@@ -402,7 +402,7 @@ function fetchTx(tx: string) {
                                 </div>
                             </div>
                         </div>
-                        <label class="mt-10 flex justify-center text-sm" @click="viewTransaction">
+                        <label class="mt-10 flex justify-center text-sm tx-link" @click="viewTransaction">
                             <span>View Transaction</span>
                         </label>
                     </div>

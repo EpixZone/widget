@@ -119128,7 +119128,7 @@ const _hoisted_1$8 = { class: "form-control" }, _hoisted_2$8 = /* @__PURE__ */ c
                 ])
               ]),
               createBaseVNode("label", {
-                class: "mt-10 flex justify-center text-sm",
+                class: "mt-10 flex justify-center text-sm tx-link",
                 onClick: ae
               }, _hoisted_41$1)
             ])) : createCommentVNode("", !0)
@@ -258299,7 +258299,7 @@ const _334 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty
     },
     osmosis: {
       concentratedliquidity: {
-        v1beta1: new (await import("./query.lcd-b41836c4.js")).LCDQueryClient({
+        v1beta1: new (await import("./query.lcd-0f1ae17d.js")).LCDQueryClient({
           requestClient: n
         })
       },
@@ -258424,7 +258424,7 @@ const _334 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty
     },
     osmosis: {
       concentratedliquidity: {
-        v1beta1: (await import("./query.rpc.Query-0f2184de.js")).createRpcQueryExtension(o)
+        v1beta1: (await import("./query.rpc.Query-3e0679d7.js")).createRpcQueryExtension(o)
       },
       cosmwasmpool: {
         v1beta1: (await Promise.resolve().then(() => _307)).createRpcQueryExtension(o)
@@ -258500,7 +258500,7 @@ const _334 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty
   },
   osmosis: {
     concentratedliquidity: {
-      v1beta1: new (await import("./tx.rpc.msg-c3fa4b29.js")).MsgClientImpl(e)
+      v1beta1: new (await import("./tx.rpc.msg-e9b503d2.js")).MsgClientImpl(e)
     },
     gamm: {
       poolmodels: {
