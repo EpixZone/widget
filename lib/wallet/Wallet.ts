@@ -1,5 +1,6 @@
 import { Registry } from '@cosmjs/proto-signing'
 import { defaultRegistryTypes } from "@cosmjs/stargate";
+import { MsgCancelUnbondingDelegation } from "cosmjs-types/cosmos/staking/v1beta1/tx";
 import { Transaction } from "../utils/type";
 import { KeplerWallet } from './wallets/KeplerWallet';
 import { LedgerWallet } from './wallets/LedgerWallet';
@@ -105,7 +106,11 @@ export function extractChainId(chainId: string) {
 }
 
 export function createWallet(name: WalletName, arg: WalletArgument, registry?: Registry, chain?: IChain,): AbstractWallet {
-    const reg = registry || new Registry(defaultRegistryTypes)
+    // Add MsgCancelUnbondingDelegation to the default registry
+    const cancelUnbondingType = [
+        ["/cosmos.staking.v1beta1.MsgCancelUnbondingDelegation", MsgCancelUnbondingDelegation]
+    ];
+    const reg = registry || new Registry([...defaultRegistryTypes, ...cancelUnbondingType])
     switch (name) {
         case WalletName.OKX:
             return new OKXWallet(arg, <IChain>chain, reg);

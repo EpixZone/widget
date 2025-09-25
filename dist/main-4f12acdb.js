@@ -116428,22 +116428,24 @@ function extractChainId(e) {
   return o > n && n > 0 ? Number(e.substring(n + 1, o)) : 0;
 }
 function createWallet(e, n, o, d) {
-  const u = o || new build$o.Registry(build$i.defaultRegistryTypes);
+  const u = [
+    ["/cosmos.staking.v1beta1.MsgCancelUnbondingDelegation", tx$p.MsgCancelUnbondingDelegation]
+  ], l = o || new build$o.Registry([...build$i.defaultRegistryTypes, ...u]);
   switch (e) {
     case "OKX Wallet":
-      return new OKXWallet(n, d, u);
+      return new OKXWallet(n, d, l);
     case "UniSat Wallet":
-      return new UnisatWallet(n, d, u);
+      return new UnisatWallet(n, d, l);
     case "Keplr":
-      return new KeplerWallet(n, u);
+      return new KeplerWallet(n, l);
     case "LedgerUSB":
-      return new LedgerWallet(n, u);
+      return new LedgerWallet(n, l);
     case "Leap":
-      return new LeapWallet(n, u);
+      return new LeapWallet(n, l);
     case "MetamaskSnap":
-      return new MetamaskSnapWallet(n, u);
+      return new MetamaskSnapWallet(n, l);
     case "Metamask":
-      return n.hdPath && (n.hdPath.startsWith("m/44/60") || n.hdPath.startsWith("m/44'/60")) ? new MetamaskWallet(n, u) : new MetamaskSnapWallet(n, u);
+      return n.hdPath && (n.hdPath.startsWith("m/44/60") || n.hdPath.startsWith("m/44'/60")) ? new MetamaskWallet(n, l) : new MetamaskSnapWallet(n, l);
   }
   throw new Error("No wallet connected");
 }
@@ -116451,7 +116453,10 @@ class UniClient {
   constructor(n, o) {
     li(this, "registry");
     li(this, "wallet");
-    this.registry = new build$o.Registry([...build$i.defaultRegistryTypes, ...modules$1.wasmTypes]), this.wallet = createWallet(n, o, this.registry);
+    const d = [
+      ["/cosmos.staking.v1beta1.MsgCancelUnbondingDelegation", tx$p.MsgCancelUnbondingDelegation]
+    ];
+    this.registry = new build$o.Registry([...build$i.defaultRegistryTypes, ...modules$1.wasmTypes, ...d]), this.wallet = createWallet(n, o, this.registry);
   }
   async getAccounts() {
     return this.wallet.getAccounts();
@@ -116583,9 +116588,9 @@ class TokenUnitConverter {
     } : o;
   }
 }
-const _hoisted_1$h = { class: "form-control" }, _hoisted_2$h = /* @__PURE__ */ createBaseVNode("label", { class: "label" }, [
+const _hoisted_1$i = { class: "form-control" }, _hoisted_2$i = /* @__PURE__ */ createBaseVNode("label", { class: "label" }, [
   /* @__PURE__ */ createBaseVNode("span", { class: "label-text" }, "Sender")
-], -1), _hoisted_3$h = ["value"], _hoisted_4$e = { class: "form-control" }, _hoisted_5$f = { class: "label" }, _hoisted_6$f = /* @__PURE__ */ createBaseVNode("span", { class: "label-text" }, "Validator", -1), _hoisted_7$e = /* @__PURE__ */ createBaseVNode("option", { value: "" }, "Select a validator", -1), _hoisted_8$e = ["value"], _hoisted_9$b = { key: 0 }, _hoisted_10$b = { class: "form-control" }, _hoisted_11$9 = { class: "label" }, _hoisted_12$9 = /* @__PURE__ */ createBaseVNode("span", { class: "label-text" }, "Amount", -1), _hoisted_13$8 = { class: "join" }, _hoisted_14$8 = ["placeholder"], _sfc_main$h = /* @__PURE__ */ defineComponent({
+], -1), _hoisted_3$i = ["value"], _hoisted_4$f = { class: "form-control" }, _hoisted_5$g = { class: "label" }, _hoisted_6$g = /* @__PURE__ */ createBaseVNode("span", { class: "label-text" }, "Validator", -1), _hoisted_7$f = /* @__PURE__ */ createBaseVNode("option", { value: "" }, "Select a validator", -1), _hoisted_8$f = ["value"], _hoisted_9$c = { key: 0 }, _hoisted_10$c = { class: "form-control" }, _hoisted_11$a = { class: "label" }, _hoisted_12$a = /* @__PURE__ */ createBaseVNode("span", { class: "label-text" }, "Amount", -1), _hoisted_13$9 = { class: "join" }, _hoisted_14$9 = ["placeholder"], _sfc_main$i = /* @__PURE__ */ defineComponent({
   __name: "Delegate",
   props: {
     endpoint: { type: String, required: !0 },
@@ -116649,17 +116654,17 @@ const _hoisted_1$h = { class: "form-control" }, _hoisted_2$h = /* @__PURE__ */ c
     return n({ msgs: j, isValid: $, initial: C }), (O, X) => {
       var V, ae, E;
       return openBlock(), createElementBlock("div", null, [
-        createBaseVNode("div", _hoisted_1$h, [
-          _hoisted_2$h,
+        createBaseVNode("div", _hoisted_1$i, [
+          _hoisted_2$i,
           createBaseVNode("input", {
             value: e.sender,
             type: "text",
             class: "text-gray-600 dark:text-white input border !border-gray-300 dark:!border-gray-600"
-          }, null, 8, _hoisted_3$h)
+          }, null, 8, _hoisted_3$i)
         ]),
-        createBaseVNode("div", _hoisted_4$e, [
-          createBaseVNode("label", _hoisted_5$f, [
-            _hoisted_6$f,
+        createBaseVNode("div", _hoisted_4$f, [
+          createBaseVNode("label", _hoisted_5$g, [
+            _hoisted_6$g,
             createBaseVNode("a", {
               class: "label-text",
               onClick: X[0] || (X[0] = (W) => L())
@@ -116669,29 +116674,29 @@ const _hoisted_1$h = { class: "form-control" }, _hoisted_2$h = /* @__PURE__ */ c
             "onUpdate:modelValue": X[1] || (X[1] = (W) => u.value = W),
             class: "select select-bordered dark:text-white"
           }, [
-            _hoisted_7$e,
+            _hoisted_7$f,
             (openBlock(!0), createElementBlock(Fragment, null, renderList(q.value, (W) => (openBlock(), createElementBlock("option", {
               value: W.operator_address
             }, [
               createTextVNode(toDisplayString(W.description.moniker) + " (" + toDisplayString(unref(decimal2percent)(W.commission.commission_rates.rate)) + "%) ", 1),
-              W.status !== "BOND_STATUS_BONDED" ? (openBlock(), createElementBlock("span", _hoisted_9$b, "x")) : createCommentVNode("", !0)
-            ], 8, _hoisted_8$e))), 256))
+              W.status !== "BOND_STATUS_BONDED" ? (openBlock(), createElementBlock("span", _hoisted_9$c, "x")) : createCommentVNode("", !0)
+            ], 8, _hoisted_8$f))), 256))
           ], 512), [
             [vModelSelect, u.value]
           ])
         ]),
-        createBaseVNode("div", _hoisted_10$b, [
-          createBaseVNode("label", _hoisted_11$9, [
-            _hoisted_12$9,
+        createBaseVNode("div", _hoisted_10$c, [
+          createBaseVNode("label", _hoisted_11$a, [
+            _hoisted_12$a,
             createBaseVNode("span", null, toDisplayString((V = g.value) == null ? void 0 : V.display.amount) + " " + toDisplayString((ae = g.value) == null ? void 0 : ae.display.denom), 1)
           ]),
-          createBaseVNode("label", _hoisted_13$8, [
+          createBaseVNode("label", _hoisted_13$9, [
             withDirectives(createBaseVNode("input", {
               "onUpdate:modelValue": X[2] || (X[2] = (W) => J.value = W),
               type: "number",
               placeholder: `Available: ${(E = g.value) == null ? void 0 : E.display.amount}`,
               class: "input border border-gray-300 dark:border-gray-600 w-full join-item dark:text-white"
-            }, null, 8, _hoisted_14$8), [
+            }, null, 8, _hoisted_14$9), [
               [vModelText, J.value]
             ]),
             withDirectives(createBaseVNode("select", {
@@ -116707,9 +116712,9 @@ const _hoisted_1$h = { class: "form-control" }, _hoisted_2$h = /* @__PURE__ */ c
       ]);
     };
   }
-}), _hoisted_1$g = { class: "form-control" }, _hoisted_2$g = /* @__PURE__ */ createBaseVNode("label", { class: "label" }, [
+}), _hoisted_1$h = { class: "form-control" }, _hoisted_2$h = /* @__PURE__ */ createBaseVNode("label", { class: "label" }, [
   /* @__PURE__ */ createBaseVNode("span", { class: "label-text" }, "Sender")
-], -1), _hoisted_3$g = ["value"], _hoisted_4$d = { class: "form-control" }, _hoisted_5$e = { class: "label" }, _hoisted_6$e = /* @__PURE__ */ createBaseVNode("span", { class: "label-text" }, "Amount", -1), _hoisted_7$d = { class: "input-group" }, _hoisted_8$d = ["placeholder"], _sfc_main$g = /* @__PURE__ */ defineComponent({
+], -1), _hoisted_3$h = ["value"], _hoisted_4$e = { class: "form-control" }, _hoisted_5$f = { class: "label" }, _hoisted_6$f = /* @__PURE__ */ createBaseVNode("span", { class: "label-text" }, "Amount", -1), _hoisted_7$e = { class: "input-group" }, _hoisted_8$e = ["placeholder"], _sfc_main$h = /* @__PURE__ */ defineComponent({
   __name: "Deposit",
   props: {
     endpoint: { type: String, required: !0 },
@@ -116756,26 +116761,26 @@ const _hoisted_1$h = { class: "form-control" }, _hoisted_2$h = /* @__PURE__ */ c
     return n({ msgs: U, isValid: Y, initial: j }), (q, g) => {
       var L, P, $;
       return openBlock(), createElementBlock("div", null, [
-        createBaseVNode("div", _hoisted_1$g, [
-          _hoisted_2$g,
+        createBaseVNode("div", _hoisted_1$h, [
+          _hoisted_2$h,
           createBaseVNode("input", {
             value: e.sender,
             type: "text",
             class: "text-gray-600 dark:text-white input border !border-gray-300 dark:!border-gray-600"
-          }, null, 8, _hoisted_3$g)
+          }, null, 8, _hoisted_3$h)
         ]),
-        createBaseVNode("div", _hoisted_4$d, [
-          createBaseVNode("label", _hoisted_5$e, [
-            _hoisted_6$e,
+        createBaseVNode("div", _hoisted_4$e, [
+          createBaseVNode("label", _hoisted_5$f, [
+            _hoisted_6$f,
             createBaseVNode("span", null, toDisplayString((L = M.value) == null ? void 0 : L.display.amount) + toDisplayString((P = M.value) == null ? void 0 : P.display.denom), 1)
           ]),
-          createBaseVNode("label", _hoisted_7$d, [
+          createBaseVNode("label", _hoisted_7$e, [
             withDirectives(createBaseVNode("input", {
               "onUpdate:modelValue": g[0] || (g[0] = (C) => l.value = C),
               type: "number",
               placeholder: `Available: ${($ = M.value) == null ? void 0 : $.display.amount}`,
               class: "input border border-gray-300 dark:border-gray-600 w-full dark:text-white"
-            }, null, 8, _hoisted_8$d), [
+            }, null, 8, _hoisted_8$e), [
               [vModelText, l.value]
             ]),
             withDirectives(createBaseVNode("select", {
@@ -116791,13 +116796,13 @@ const _hoisted_1$h = { class: "form-control" }, _hoisted_2$h = /* @__PURE__ */ c
       ]);
     };
   }
-}), _hoisted_1$f = { class: "form-control" }, _hoisted_2$f = /* @__PURE__ */ createBaseVNode("label", { class: "label" }, [
+}), _hoisted_1$g = { class: "form-control" }, _hoisted_2$g = /* @__PURE__ */ createBaseVNode("label", { class: "label" }, [
   /* @__PURE__ */ createBaseVNode("span", { class: "label-text" }, "Sender")
-], -1), _hoisted_3$f = ["value"], _hoisted_4$c = { class: "form-control" }, _hoisted_5$d = /* @__PURE__ */ createBaseVNode("label", { class: "label" }, [
+], -1), _hoisted_3$g = ["value"], _hoisted_4$d = { class: "form-control" }, _hoisted_5$e = /* @__PURE__ */ createBaseVNode("label", { class: "label" }, [
   /* @__PURE__ */ createBaseVNode("span", { class: "label-text" }, "Source Validator")
-], -1), _hoisted_6$d = ["value"], _hoisted_7$c = { class: "form-control" }, _hoisted_8$c = /* @__PURE__ */ createBaseVNode("label", { class: "label" }, [
+], -1), _hoisted_6$e = ["value"], _hoisted_7$d = { class: "form-control" }, _hoisted_8$d = /* @__PURE__ */ createBaseVNode("label", { class: "label" }, [
   /* @__PURE__ */ createBaseVNode("span", { class: "label-text" }, "Destination Validator")
-], -1), _hoisted_9$a = /* @__PURE__ */ createBaseVNode("option", { value: "" }, "Select a validator", -1), _hoisted_10$a = ["value"], _hoisted_11$8 = { key: 0 }, _hoisted_12$8 = { class: "form-control" }, _hoisted_13$7 = { class: "label" }, _hoisted_14$7 = /* @__PURE__ */ createBaseVNode("span", { class: "label-text" }, "Amount", -1), _hoisted_15$6 = { class: "input-group" }, _hoisted_16$6 = ["placeholder"], _hoisted_17$5 = { class: "text-error" }, _sfc_main$f = /* @__PURE__ */ defineComponent({
+], -1), _hoisted_9$b = /* @__PURE__ */ createBaseVNode("option", { value: "" }, "Select a validator", -1), _hoisted_10$b = ["value"], _hoisted_11$9 = { key: 0 }, _hoisted_12$9 = { class: "form-control" }, _hoisted_13$8 = { class: "label" }, _hoisted_14$8 = /* @__PURE__ */ createBaseVNode("span", { class: "label-text" }, "Amount", -1), _hoisted_15$7 = { class: "input-group" }, _hoisted_16$7 = ["placeholder"], _hoisted_17$6 = { class: "text-error" }, _sfc_main$g = /* @__PURE__ */ defineComponent({
   __name: "Redelegate",
   props: {
     endpoint: { type: String, required: !0 },
@@ -116854,52 +116859,52 @@ const _hoisted_1$h = { class: "form-control" }, _hoisted_2$h = /* @__PURE__ */ c
     return n({ msgs: g, isValid: C, initial: O }), (X, V) => {
       var ae, E, W, ne;
       return openBlock(), createElementBlock("div", null, [
-        createBaseVNode("div", _hoisted_1$f, [
-          _hoisted_2$f,
+        createBaseVNode("div", _hoisted_1$g, [
+          _hoisted_2$g,
           createBaseVNode("input", {
             value: e.sender,
             type: "text",
             class: "text-gray-600 dark:text-white input border !border-gray-300 dark:!border-gray-600"
-          }, null, 8, _hoisted_3$f)
+          }, null, 8, _hoisted_3$g)
         ]),
-        createBaseVNode("div", _hoisted_4$c, [
-          _hoisted_5$d,
+        createBaseVNode("div", _hoisted_4$d, [
+          _hoisted_5$e,
           createBaseVNode("input", {
             value: q.value,
             type: "text",
             class: "input border border-gray-300 dark:border-gray-600 dark:text-white",
             readonly: ""
-          }, null, 8, _hoisted_6$d)
+          }, null, 8, _hoisted_6$e)
         ]),
-        createBaseVNode("div", _hoisted_7$c, [
-          _hoisted_8$c,
+        createBaseVNode("div", _hoisted_7$d, [
+          _hoisted_8$d,
           withDirectives(createBaseVNode("select", {
             "onUpdate:modelValue": V[0] || (V[0] = (ee) => u.value = ee),
             class: "select select-bordered dark:text-white"
           }, [
-            _hoisted_9$a,
+            _hoisted_9$b,
             (openBlock(!0), createElementBlock(Fragment, null, renderList(L.value, (ee) => (openBlock(), createElementBlock("option", {
               value: ee.operator_address
             }, [
               createTextVNode(toDisplayString(ee.description.moniker) + " (" + toDisplayString(unref(decimal2percent)(ee.commission.commission_rates.rate)) + "%) ", 1),
-              ee.status !== "BOND_STATUS_BONDED" ? (openBlock(), createElementBlock("span", _hoisted_11$8, "x")) : createCommentVNode("", !0)
-            ], 8, _hoisted_10$a))), 256))
+              ee.status !== "BOND_STATUS_BONDED" ? (openBlock(), createElementBlock("span", _hoisted_11$9, "x")) : createCommentVNode("", !0)
+            ], 8, _hoisted_10$b))), 256))
           ], 512), [
             [vModelSelect, u.value]
           ])
         ]),
-        createBaseVNode("div", _hoisted_12$8, [
-          createBaseVNode("label", _hoisted_13$7, [
-            _hoisted_14$7,
+        createBaseVNode("div", _hoisted_12$9, [
+          createBaseVNode("label", _hoisted_13$8, [
+            _hoisted_14$8,
             createBaseVNode("span", null, toDisplayString((ae = P.value) == null ? void 0 : ae.display.amount) + toDisplayString((E = P.value) == null ? void 0 : E.display.denom), 1)
           ]),
-          createBaseVNode("label", _hoisted_15$6, [
+          createBaseVNode("label", _hoisted_15$7, [
             withDirectives(createBaseVNode("input", {
               "onUpdate:modelValue": V[1] || (V[1] = (ee) => U.value = ee),
               type: "number",
               placeholder: `Available: ${(W = P.value) == null ? void 0 : W.display.amount}${(ne = P.value) == null ? void 0 : ne.display.denom}`,
               class: "input border border-gray-300 dark:border-gray-600 w-full dark:text-white"
-            }, null, 8, _hoisted_16$6), [
+            }, null, 8, _hoisted_16$7), [
               [vModelText, U.value]
             ]),
             withDirectives(createBaseVNode("select", {
@@ -116912,17 +116917,17 @@ const _hoisted_1$h = { class: "form-control" }, _hoisted_2$h = /* @__PURE__ */ c
             ])
           ])
         ]),
-        createBaseVNode("div", _hoisted_17$5, toDisplayString(j.value), 1)
+        createBaseVNode("div", _hoisted_17$6, toDisplayString(j.value), 1)
       ]);
     };
   }
-}), _hoisted_1$e = { class: "dark:text-gray-400" }, _hoisted_2$e = { class: "form-control" }, _hoisted_3$e = /* @__PURE__ */ createBaseVNode("label", { class: "label" }, [
+}), _hoisted_1$f = { class: "dark:text-gray-400" }, _hoisted_2$f = { class: "form-control" }, _hoisted_3$f = /* @__PURE__ */ createBaseVNode("label", { class: "label" }, [
   /* @__PURE__ */ createBaseVNode("span", { class: "label-text" }, "Sender")
-], -1), _hoisted_4$b = ["value"], _hoisted_5$c = { class: "form-control" }, _hoisted_6$c = /* @__PURE__ */ createBaseVNode("label", { class: "label" }, [
+], -1), _hoisted_4$c = ["value"], _hoisted_5$d = { class: "form-control" }, _hoisted_6$d = /* @__PURE__ */ createBaseVNode("label", { class: "label" }, [
   /* @__PURE__ */ createBaseVNode("span", { class: "label-text" }, "Balances")
-], -1), _hoisted_7$b = /* @__PURE__ */ createBaseVNode("option", { value: "" }, "Select a token", -1), _hoisted_8$b = ["value"], _hoisted_9$9 = { class: "form-control" }, _hoisted_10$9 = /* @__PURE__ */ createBaseVNode("label", { class: "label" }, [
+], -1), _hoisted_7$c = /* @__PURE__ */ createBaseVNode("option", { value: "" }, "Select a token", -1), _hoisted_8$c = ["value"], _hoisted_9$a = { class: "form-control" }, _hoisted_10$a = /* @__PURE__ */ createBaseVNode("label", { class: "label" }, [
   /* @__PURE__ */ createBaseVNode("span", { class: "label-text" }, "Recipient")
-], -1), _hoisted_11$7 = { class: "form-control" }, _hoisted_12$7 = { class: "label" }, _hoisted_13$6 = /* @__PURE__ */ createBaseVNode("span", { class: "label-text" }, "Amount", -1), _hoisted_14$6 = { class: "input-group" }, _hoisted_15$5 = ["placeholder"], _hoisted_16$5 = ["value"], _sfc_main$e = /* @__PURE__ */ defineComponent({
+], -1), _hoisted_11$8 = { class: "form-control" }, _hoisted_12$8 = { class: "label" }, _hoisted_13$7 = /* @__PURE__ */ createBaseVNode("span", { class: "label-text" }, "Amount", -1), _hoisted_14$7 = { class: "input-group" }, _hoisted_15$6 = ["placeholder"], _hoisted_16$6 = ["value"], _sfc_main$f = /* @__PURE__ */ defineComponent({
   __name: "Send",
   props: {
     endpoint: { type: String, required: !0 },
@@ -116984,31 +116989,31 @@ const _hoisted_1$h = { class: "form-control" }, _hoisted_2$h = /* @__PURE__ */ c
     }
     return n({ msgs: M, isValid: j, initial: q }), (L, P) => {
       var $;
-      return openBlock(), createElementBlock("div", _hoisted_1$e, [
-        createBaseVNode("div", _hoisted_2$e, [
-          _hoisted_3$e,
+      return openBlock(), createElementBlock("div", _hoisted_1$f, [
+        createBaseVNode("div", _hoisted_2$f, [
+          _hoisted_3$f,
           createBaseVNode("input", {
             value: e.sender,
             type: "text",
             class: "text-gray-600 dark:text-white input border !border-gray-300 dark:!border-gray-600"
-          }, null, 8, _hoisted_4$b)
+          }, null, 8, _hoisted_4$c)
         ]),
-        createBaseVNode("div", _hoisted_5$c, [
-          _hoisted_6$c,
+        createBaseVNode("div", _hoisted_5$d, [
+          _hoisted_6$d,
           withDirectives(createBaseVNode("select", {
             "onUpdate:modelValue": P[0] || (P[0] = (C) => l.value = C),
             class: "select select-bordered dark:text-white"
           }, [
-            _hoisted_7$b,
+            _hoisted_7$c,
             (openBlock(!0), createElementBlock(Fragment, null, renderList(J.value, ({ base: C, display: O }) => (openBlock(), createElementBlock("option", {
               value: C.denom
-            }, toDisplayString(O.amount) + " " + toDisplayString(O.denom), 9, _hoisted_8$b))), 256))
+            }, toDisplayString(O.amount) + " " + toDisplayString(O.denom), 9, _hoisted_8$c))), 256))
           ], 512), [
             [vModelSelect, l.value]
           ])
         ]),
-        createBaseVNode("div", _hoisted_9$9, [
-          _hoisted_10$9,
+        createBaseVNode("div", _hoisted_9$a, [
+          _hoisted_10$a,
           withDirectives(createBaseVNode("input", {
             "onUpdate:modelValue": P[1] || (P[1] = (C) => u.value = C),
             type: "text",
@@ -117017,18 +117022,18 @@ const _hoisted_1$h = { class: "form-control" }, _hoisted_2$h = /* @__PURE__ */ c
             [vModelText, u.value]
           ])
         ]),
-        createBaseVNode("div", _hoisted_11$7, [
-          createBaseVNode("label", _hoisted_12$7, [
-            _hoisted_13$6,
+        createBaseVNode("div", _hoisted_11$8, [
+          createBaseVNode("label", _hoisted_12$8, [
+            _hoisted_13$7,
             createBaseVNode("span", null, toDisplayString(U.value.display.amount) + " " + toDisplayString(g(U.value.display.denom)), 1)
           ]),
-          createBaseVNode("label", _hoisted_14$6, [
+          createBaseVNode("label", _hoisted_14$7, [
             withDirectives(createBaseVNode("input", {
               "onUpdate:modelValue": P[2] || (P[2] = (C) => d.value = C),
               type: "number",
               placeholder: `Available: ${($ = U.value) == null ? void 0 : $.display.amount}`,
               class: "input border border-gray-300 dark:border-gray-600 w-full dark:text-white"
-            }, null, 8, _hoisted_15$5), [
+            }, null, 8, _hoisted_15$6), [
               [vModelText, d.value]
             ]),
             withDirectives(createBaseVNode("select", {
@@ -117037,7 +117042,7 @@ const _hoisted_1$h = { class: "form-control" }, _hoisted_2$h = /* @__PURE__ */ c
             }, [
               (openBlock(!0), createElementBlock(Fragment, null, renderList(Y.value, (C) => (openBlock(), createElementBlock("option", {
                 value: C.denom
-              }, toDisplayString(g(C.denom)), 9, _hoisted_16$5))), 256))
+              }, toDisplayString(g(C.denom)), 9, _hoisted_16$6))), 256))
             ], 512), [
               [vModelSelect, m.value]
             ])
@@ -117410,16 +117415,16 @@ var utc$1 = { exports: {} };
   });
 })(utc$1);
 var utcExports = utc$1.exports;
-const utc = /* @__PURE__ */ getDefaultExportFromCjs(utcExports), _hoisted_1$d = { class: "form-control" }, _hoisted_2$d = /* @__PURE__ */ createBaseVNode("label", { class: "label" }, [
+const utc = /* @__PURE__ */ getDefaultExportFromCjs(utcExports), _hoisted_1$e = { class: "form-control" }, _hoisted_2$e = /* @__PURE__ */ createBaseVNode("label", { class: "label" }, [
   /* @__PURE__ */ createBaseVNode("span", { class: "label-text" }, "Sender")
-], -1), _hoisted_3$d = ["value"], _hoisted_4$a = { class: "form-control" }, _hoisted_5$b = /* @__PURE__ */ createBaseVNode("label", { class: "label" }, [
+], -1), _hoisted_3$e = ["value"], _hoisted_4$b = { class: "form-control" }, _hoisted_5$c = /* @__PURE__ */ createBaseVNode("label", { class: "label" }, [
   /* @__PURE__ */ createBaseVNode("span", { class: "label-text" }, "Balances")
-], -1), _hoisted_6$b = /* @__PURE__ */ createBaseVNode("option", { value: "" }, "Select a token", -1), _hoisted_7$a = ["value"], _hoisted_8$a = { class: "form-control" }, _hoisted_9$8 = { class: "label" }, _hoisted_10$8 = /* @__PURE__ */ createBaseVNode("span", { class: "label-text" }, "Destination", -1), _hoisted_11$6 = {
+], -1), _hoisted_6$c = /* @__PURE__ */ createBaseVNode("option", { value: "" }, "Select a token", -1), _hoisted_7$b = ["value"], _hoisted_8$b = { class: "form-control" }, _hoisted_9$9 = { class: "label" }, _hoisted_10$9 = /* @__PURE__ */ createBaseVNode("span", { class: "label-text" }, "Destination", -1), _hoisted_11$7 = {
   key: 0,
   class: "text-xs"
-}, _hoisted_12$6 = ["disabled"], _hoisted_13$5 = /* @__PURE__ */ createBaseVNode("option", { value: "" }, "Select Destination", -1), _hoisted_14$5 = ["value"], _hoisted_15$4 = { class: "form-control" }, _hoisted_16$4 = /* @__PURE__ */ createBaseVNode("label", { class: "label" }, [
+}, _hoisted_12$7 = ["disabled"], _hoisted_13$6 = /* @__PURE__ */ createBaseVNode("option", { value: "" }, "Select Destination", -1), _hoisted_14$6 = ["value"], _hoisted_15$5 = { class: "form-control" }, _hoisted_16$5 = /* @__PURE__ */ createBaseVNode("label", { class: "label" }, [
   /* @__PURE__ */ createBaseVNode("span", { class: "label-text" }, "Recipient")
-], -1), _hoisted_17$4 = { class: "form-control" }, _hoisted_18$4 = { class: "label" }, _hoisted_19$3 = /* @__PURE__ */ createBaseVNode("span", { class: "label-text" }, "Amount", -1), _hoisted_20$3 = { class: "input-group" }, _hoisted_21$3 = ["placeholder"], _hoisted_22$3 = ["value"], _sfc_main$d = /* @__PURE__ */ defineComponent({
+], -1), _hoisted_17$5 = { class: "form-control" }, _hoisted_18$4 = { class: "label" }, _hoisted_19$3 = /* @__PURE__ */ createBaseVNode("span", { class: "label-text" }, "Amount", -1), _hoisted_20$3 = { class: "input-group" }, _hoisted_21$3 = ["placeholder"], _hoisted_22$3 = ["value"], _sfc_main$e = /* @__PURE__ */ defineComponent({
   __name: "Transfer",
   props: {
     endpoint: { type: String, required: !0 },
@@ -117529,33 +117534,33 @@ const utc = /* @__PURE__ */ getDefaultExportFromCjs(utcExports), _hoisted_1$d = 
     return n({ msgs: L, isValid: ae, initial: E }), (ne, ee) => {
       var ie;
       return openBlock(), createElementBlock("div", null, [
-        createBaseVNode("div", _hoisted_1$d, [
-          _hoisted_2$d,
+        createBaseVNode("div", _hoisted_1$e, [
+          _hoisted_2$e,
           createBaseVNode("input", {
             value: e.sender,
             type: "text",
             class: "text-gray-600 dark:text-white input border !border-gray-300 dark:!border-gray-600"
-          }, null, 8, _hoisted_3$d)
+          }, null, 8, _hoisted_3$e)
         ]),
-        createBaseVNode("div", _hoisted_4$a, [
-          _hoisted_5$b,
+        createBaseVNode("div", _hoisted_4$b, [
+          _hoisted_5$c,
           withDirectives(createBaseVNode("select", {
             "onUpdate:modelValue": ee[0] || (ee[0] = (D) => U.value = D),
             class: "select select-bordered dark:text-white",
             onChange: C
           }, [
-            _hoisted_6$b,
+            _hoisted_6$c,
             (openBlock(!0), createElementBlock(Fragment, null, renderList(X.value, ({ base: D, display: _ }) => (openBlock(), createElementBlock("option", {
               value: D.denom
-            }, toDisplayString(_.amount) + " " + toDisplayString(W(_.denom)), 9, _hoisted_7$a))), 256))
+            }, toDisplayString(_.amount) + " " + toDisplayString(W(_.denom)), 9, _hoisted_7$b))), 256))
           ], 544), [
             [vModelSelect, U.value]
           ])
         ]),
-        createBaseVNode("div", _hoisted_8$a, [
-          createBaseVNode("label", _hoisted_9$8, [
-            _hoisted_10$8,
-            j.value ? (openBlock(), createElementBlock("span", _hoisted_11$6, toDisplayString(j.value.channel_id) + "/" + toDisplayString(j.value.port_id), 1)) : createCommentVNode("", !0)
+        createBaseVNode("div", _hoisted_8$b, [
+          createBaseVNode("label", _hoisted_9$9, [
+            _hoisted_10$9,
+            j.value ? (openBlock(), createElementBlock("span", _hoisted_11$7, toDisplayString(j.value.channel_id) + "/" + toDisplayString(j.value.port_id), 1)) : createCommentVNode("", !0)
           ]),
           withDirectives(createBaseVNode("select", {
             "onUpdate:modelValue": ee[1] || (ee[1] = (D) => J.value = D),
@@ -117563,16 +117568,16 @@ const utc = /* @__PURE__ */ getDefaultExportFromCjs(utcExports), _hoisted_1$d = 
             onChange: $,
             disabled: P.value
           }, [
-            _hoisted_13$5,
+            _hoisted_13$6,
             (openBlock(!0), createElementBlock(Fragment, null, renderList(Y.value, (D) => (openBlock(), createElementBlock("option", {
               value: D.path
-            }, toDisplayString(D.from === d.value.chain_name ? D.to : D.from), 9, _hoisted_14$5))), 256))
-          ], 40, _hoisted_12$6), [
+            }, toDisplayString(D.from === d.value.chain_name ? D.to : D.from), 9, _hoisted_14$6))), 256))
+          ], 40, _hoisted_12$7), [
             [vModelSelect, J.value]
           ])
         ]),
-        createBaseVNode("div", _hoisted_15$4, [
-          _hoisted_16$4,
+        createBaseVNode("div", _hoisted_15$5, [
+          _hoisted_16$5,
           withDirectives(createBaseVNode("input", {
             "onUpdate:modelValue": ee[2] || (ee[2] = (D) => M.value = D),
             type: "text",
@@ -117581,7 +117586,7 @@ const utc = /* @__PURE__ */ getDefaultExportFromCjs(utcExports), _hoisted_1$d = 
             [vModelText, M.value]
           ])
         ]),
-        createBaseVNode("div", _hoisted_17$4, [
+        createBaseVNode("div", _hoisted_17$5, [
           createBaseVNode("label", _hoisted_18$4, [
             _hoisted_19$3,
             createBaseVNode("span", null, toDisplayString(O.value.display.amount) + " " + toDisplayString(W(O.value.display.denom)), 1)
@@ -117610,11 +117615,11 @@ const utc = /* @__PURE__ */ getDefaultExportFromCjs(utcExports), _hoisted_1$d = 
       ]);
     };
   }
-}), _hoisted_1$c = { class: "form-control" }, _hoisted_2$c = /* @__PURE__ */ createBaseVNode("label", { class: "label" }, [
+}), _hoisted_1$d = { class: "form-control" }, _hoisted_2$d = /* @__PURE__ */ createBaseVNode("label", { class: "label" }, [
   /* @__PURE__ */ createBaseVNode("span", { class: "label-text" }, "Sender")
-], -1), _hoisted_3$c = ["value"], _hoisted_4$9 = { class: "form-control" }, _hoisted_5$a = /* @__PURE__ */ createBaseVNode("label", { class: "label" }, [
+], -1), _hoisted_3$d = ["value"], _hoisted_4$a = { class: "form-control" }, _hoisted_5$b = /* @__PURE__ */ createBaseVNode("label", { class: "label" }, [
   /* @__PURE__ */ createBaseVNode("span", { class: "label-text" }, "Amount")
-], -1), _hoisted_6$a = { class: "input-group" }, _hoisted_7$9 = ["placeholder"], _hoisted_8$9 = { class: "text-error" }, _sfc_main$c = /* @__PURE__ */ defineComponent({
+], -1), _hoisted_6$b = { class: "input-group" }, _hoisted_7$a = ["placeholder"], _hoisted_8$a = { class: "text-error" }, _sfc_main$d = /* @__PURE__ */ defineComponent({
   __name: "Unbond",
   props: {
     endpoint: { type: String, required: !0 },
@@ -117666,23 +117671,23 @@ const utc = /* @__PURE__ */ getDefaultExportFromCjs(utcExports), _hoisted_1$d = 
     return n({ msgs: U, isValid: Y, initial: j }), (g, L) => {
       var P;
       return openBlock(), createElementBlock("div", null, [
-        createBaseVNode("div", _hoisted_1$c, [
-          _hoisted_2$c,
+        createBaseVNode("div", _hoisted_1$d, [
+          _hoisted_2$d,
           createBaseVNode("input", {
             value: e.sender,
             type: "text",
             class: "text-gray-600 dark:text-white input border !border-gray-300 dark:!border-gray-600"
-          }, null, 8, _hoisted_3$c)
+          }, null, 8, _hoisted_3$d)
         ]),
-        createBaseVNode("div", _hoisted_4$9, [
-          _hoisted_5$a,
-          createBaseVNode("label", _hoisted_6$a, [
+        createBaseVNode("div", _hoisted_4$a, [
+          _hoisted_5$b,
+          createBaseVNode("label", _hoisted_6$b, [
             withDirectives(createBaseVNode("input", {
               "onUpdate:modelValue": L[0] || (L[0] = ($) => l.value = $),
               type: "number",
               placeholder: `Avaiable: ${(P = q.value.display) == null ? void 0 : P.amount}`,
               class: "input border border-gray-300 dark:border-gray-600 w-full dark:text-white"
-            }, null, 8, _hoisted_7$9), [
+            }, null, 8, _hoisted_7$a), [
               [vModelText, l.value]
             ]),
             withDirectives(createBaseVNode("select", {
@@ -117695,7 +117700,129 @@ const utc = /* @__PURE__ */ getDefaultExportFromCjs(utcExports), _hoisted_1$d = 
             ])
           ])
         ]),
-        createBaseVNode("div", _hoisted_8$9, toDisplayString(M.value), 1)
+        createBaseVNode("div", _hoisted_8$a, toDisplayString(M.value), 1)
+      ]);
+    };
+  }
+}), _hoisted_1$c = { class: "form-control" }, _hoisted_2$c = /* @__PURE__ */ createBaseVNode("label", { class: "label" }, [
+  /* @__PURE__ */ createBaseVNode("span", { class: "label-text" }, "Sender")
+], -1), _hoisted_3$c = ["value"], _hoisted_4$9 = { class: "form-control" }, _hoisted_5$a = /* @__PURE__ */ createBaseVNode("label", { class: "label" }, [
+  /* @__PURE__ */ createBaseVNode("span", { class: "label-text" }, "Validator Address")
+], -1), _hoisted_6$a = ["value"], _hoisted_7$9 = { class: "form-control" }, _hoisted_8$9 = /* @__PURE__ */ createBaseVNode("label", { class: "label" }, [
+  /* @__PURE__ */ createBaseVNode("span", { class: "label-text" }, "Creation Height")
+], -1), _hoisted_9$8 = ["value"], _hoisted_10$8 = { class: "form-control" }, _hoisted_11$6 = { class: "label" }, _hoisted_12$6 = /* @__PURE__ */ createBaseVNode("span", { class: "label-text" }, "Amount to Cancel", -1), _hoisted_13$5 = { class: "label-text-alt" }, _hoisted_14$5 = { class: "input-group" }, _hoisted_15$4 = ["placeholder"], _hoisted_16$4 = {
+  key: 0,
+  class: "text-error mt-2"
+}, _hoisted_17$4 = /* @__PURE__ */ createStaticVNode('<div class="mt-4 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg"><div class="flex items-start"><div class="flex-shrink-0"><svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg></div><div class="ml-3"><h3 class="text-sm font-medium text-yellow-800 dark:text-yellow-200"> Cancel Unbonding Delegation </h3><div class="mt-2 text-sm text-yellow-700 dark:text-yellow-300"><p>This will cancel your unbonding delegation and immediately re-delegate the specified amount back to the validator. The tokens will be bonded again and subject to the unbonding period if you decide to unbond in the future.</p></div></div></div></div>', 1), _sfc_main$c = /* @__PURE__ */ defineComponent({
+  __name: "CancelUnbond",
+  props: {
+    endpoint: { type: String, required: !0 },
+    sender: { type: String, required: !0 },
+    metadata: Object,
+    params: String
+  },
+  setup(e, { expose: n }) {
+    const o = e, d = computed(() => JSON.parse(o.params || "{}")), u = ref(""), l = ref(""), m = ref(""), M = ref(""), U = computed(() => d.value.validator_address || ""), J = computed(() => d.value.creation_height || ""), Y = computed(() => d.value.initial_balance || ""), j = computed(() => {
+      const $ = new TokenUnitConverter(o.metadata);
+      return [{
+        typeUrl: "/cosmos.staking.v1beta1.MsgCancelUnbondingDelegation",
+        value: {
+          delegatorAddress: o.sender,
+          validatorAddress: U.value,
+          amount: $.displayToBase(M.value, {
+            amount: String(u.value),
+            denom: l.value
+          }),
+          creationHeight: J.value
+        }
+      }];
+    }), q = computed(() => {
+      if (!o.metadata || !o.metadata[M.value])
+        return l.value = M.value, [{ denom: M.value, exponent: 0, aliases: [] }];
+      const $ = o.metadata[M.value].denom_units.sort(
+        (C, O) => O.exponent - C.exponent
+      );
+      return $.length > 0 && (l.value = $[0].denom), $;
+    }), g = computed(() => {
+      let $ = !0, C = "";
+      o.sender || ($ = !1, C = "Sender is empty"), U.value || ($ = !1, C = "Validator address is empty"), J.value || ($ = !1, C = "Creation height is empty"), Number(u.value) > 0 || ($ = !1, C = "Amount should be greater than 0"), l.value || ($ = !1, C = "Amount denomination is empty");
+      const X = new TokenUnitConverter(o.metadata).baseToUnit(
+        { amount: Y.value, denom: M.value },
+        l.value
+      );
+      return Number(u.value) > Number(X.amount) && ($ = !1, C = `Amount cannot exceed initial unbonding balance of ${X.amount} ${l.value}`), { ok: $, error: C };
+    }), L = computed(() => {
+      const $ = new TokenUnitConverter(o.metadata), C = { amount: Y.value, denom: M.value };
+      return {
+        base: C,
+        display: $.baseToUnit(C, l.value)
+      };
+    });
+    function P() {
+      getStakingParam(o.endpoint).then(($) => {
+        M.value = $.params.bond_denom, setTimeout(() => {
+          L.value.display && (u.value = L.value.display.amount);
+        }, 100);
+      });
+    }
+    return n({ msgs: j, isValid: g, initial: P }), ($, C) => {
+      var O, X, V;
+      return openBlock(), createElementBlock("div", null, [
+        createBaseVNode("div", _hoisted_1$c, [
+          _hoisted_2$c,
+          createBaseVNode("input", {
+            value: e.sender,
+            type: "text",
+            class: "text-gray-600 dark:text-white input border !border-gray-300 dark:!border-gray-600",
+            readonly: ""
+          }, null, 8, _hoisted_3$c)
+        ]),
+        createBaseVNode("div", _hoisted_4$9, [
+          _hoisted_5$a,
+          createBaseVNode("input", {
+            value: U.value,
+            type: "text",
+            class: "text-gray-600 dark:text-white input border !border-gray-300 dark:!border-gray-600",
+            readonly: ""
+          }, null, 8, _hoisted_6$a)
+        ]),
+        createBaseVNode("div", _hoisted_7$9, [
+          _hoisted_8$9,
+          createBaseVNode("input", {
+            value: J.value,
+            type: "text",
+            class: "text-gray-600 dark:text-white input border !border-gray-300 dark:!border-gray-600",
+            readonly: ""
+          }, null, 8, _hoisted_9$8)
+        ]),
+        createBaseVNode("div", _hoisted_10$8, [
+          createBaseVNode("label", _hoisted_11$6, [
+            _hoisted_12$6,
+            createBaseVNode("span", _hoisted_13$5, " Available: " + toDisplayString((O = L.value) == null ? void 0 : O.display.amount) + " " + toDisplayString((X = L.value) == null ? void 0 : X.display.denom), 1)
+          ]),
+          createBaseVNode("label", _hoisted_14$5, [
+            withDirectives(createBaseVNode("input", {
+              "onUpdate:modelValue": C[0] || (C[0] = (ae) => u.value = ae),
+              type: "number",
+              placeholder: `Available: ${(V = L.value) == null ? void 0 : V.display.amount}`,
+              class: "input border border-gray-300 dark:border-gray-600 w-full dark:text-white"
+            }, null, 8, _hoisted_15$4), [
+              [vModelText, u.value]
+            ]),
+            withDirectives(createBaseVNode("select", {
+              "onUpdate:modelValue": C[1] || (C[1] = (ae) => l.value = ae),
+              class: "select select-bordered dark:text-white"
+            }, [
+              (openBlock(!0), createElementBlock(Fragment, null, renderList(q.value, (ae) => (openBlock(), createElementBlock("option", {
+                key: ae.denom
+              }, toDisplayString(ae.denom), 1))), 128))
+            ], 512), [
+              [vModelSelect, l.value]
+            ])
+          ])
+        ]),
+        m.value ? (openBlock(), createElementBlock("div", _hoisted_16$4, toDisplayString(m.value), 1)) : createCommentVNode("", !0),
+        _hoisted_17$4
       ]);
     };
   }
@@ -118828,23 +118955,26 @@ const _hoisted_1$8 = { class: "form-control" }, _hoisted_2$8 = /* @__PURE__ */ c
       var k;
       switch ((k = o.type) == null ? void 0 : k.toLowerCase()) {
         case "send":
-          return _sfc_main$e;
+          return _sfc_main$f;
         case "delegate":
-          return _sfc_main$h;
+          return _sfc_main$i;
         case "withdraw":
           return _sfc_main$a;
         case "withdraw_commission":
           return _sfc_main$9;
         case "redelegate":
-          return _sfc_main$f;
+          return _sfc_main$g;
         case "transfer":
-          return _sfc_main$d;
+          return _sfc_main$e;
         case "unbond":
+          return _sfc_main$d;
+        case "cancel_unbond":
+        case "cancelunbond":
           return _sfc_main$c;
         case "vote":
           return _sfc_main$b;
         case "deposit":
-          return _sfc_main$g;
+          return _sfc_main$h;
         case "wasm_store_code":
           return _sfc_main$8;
         case "wasm_execute_contract":
@@ -118858,7 +118988,7 @@ const _hoisted_1$8 = { class: "form-control" }, _hoisted_2$8 = /* @__PURE__ */ c
         case "wasm_clear_admin":
           return _sfc_main$3;
         default:
-          return _sfc_main$e;
+          return _sfc_main$f;
       }
     }), u = ref(!1), l = ref(!1), m = ref([]), M = ref({}), U = ref({}), J = ref("input"), Y = ref(!1), j = ref(""), q = ref({
       msgs: [],
@@ -119000,6 +119130,7 @@ const _hoisted_1$8 = { class: "form-control" }, _hoisted_2$8 = /* @__PURE__ */ c
               (openBlock(), createBlock(resolveDynamicComponent(d.value), {
                 ref_key: "msgBox",
                 ref: q,
+                key: o.type,
                 endpoint: e.endpoint,
                 sender: e.sender,
                 balances: m.value,
@@ -258299,7 +258430,7 @@ const _334 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty
     },
     osmosis: {
       concentratedliquidity: {
-        v1beta1: new (await import("./query.lcd-bb44f4b9.js")).LCDQueryClient({
+        v1beta1: new (await import("./query.lcd-a34a80b5.js")).LCDQueryClient({
           requestClient: n
         })
       },
@@ -258424,7 +258555,7 @@ const _334 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty
     },
     osmosis: {
       concentratedliquidity: {
-        v1beta1: (await import("./query.rpc.Query-70bc1f59.js")).createRpcQueryExtension(o)
+        v1beta1: (await import("./query.rpc.Query-eff225bd.js")).createRpcQueryExtension(o)
       },
       cosmwasmpool: {
         v1beta1: (await Promise.resolve().then(() => _307)).createRpcQueryExtension(o)
@@ -258500,7 +258631,7 @@ const _334 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty
   },
   osmosis: {
     concentratedliquidity: {
-      v1beta1: new (await import("./tx.rpc.msg-854b4e6c.js")).MsgClientImpl(e)
+      v1beta1: new (await import("./tx.rpc.msg-c0ac8951.js")).MsgClientImpl(e)
     },
     gamm: {
       poolmodels: {

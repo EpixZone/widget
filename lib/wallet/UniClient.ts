@@ -4,6 +4,7 @@ import { encodeSecp256k1Pubkey } from "@cosmjs/amino";
 import { defaultRegistryTypes } from "@cosmjs/stargate";
 import { AuthInfo, TxRaw } from "cosmjs-types/cosmos/tx/v1beta1/tx";
 import { SignMode } from "cosmjs-types/cosmos/tx/signing/v1beta1/signing";
+import { MsgCancelUnbondingDelegation } from "cosmjs-types/cosmos/staking/v1beta1/tx";
 import { AbstractWallet, WalletArgument, WalletName, createWallet } from "./Wallet";
 import { post } from "../utils/http";
 import { BroadcastMode, Transaction, TxResponse } from "../utils/type";
@@ -19,7 +20,11 @@ export class UniClient {
     registry: Registry
     wallet: AbstractWallet
     constructor(name: WalletName, arg: WalletArgument) {
-        this.registry = new Registry([...defaultRegistryTypes, ...wasmTypes])
+        // Add MsgCancelUnbondingDelegation to the registry
+        const cancelUnbondingType = [
+            ["/cosmos.staking.v1beta1.MsgCancelUnbondingDelegation", MsgCancelUnbondingDelegation]
+        ];
+        this.registry = new Registry([...defaultRegistryTypes, ...wasmTypes, ...cancelUnbondingType])
         this.wallet = createWallet(name, arg, this.registry)
     }
 
