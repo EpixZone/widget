@@ -876,7 +876,7 @@ function fetchTx(tx: string) {
                             </svg>
                         </label>
                     </div>
-                    <h3 class="text-xl font-semibold gradient-text">Swap</h3>
+                    <h3 class="text-xl font-semibold gradient-text">Swap Epix</h3>
                     <div v-if="!osmosisPath || chainName === 'osmosis'" class="text-error mt-3">
                         <span>This feature is not available [{{
                             chainName
@@ -1024,7 +1024,7 @@ function fetchTx(tx: string) {
                         <button class="modern-button w-full ping-connect-confirm capitalize text-base hover-lift"
                             :disabled="disabled" @click="doSwap">
                             <span v-if="sending" class="loading loading-spinner"></span>
-                            Swap Epix
+                            Swap
                         </button>
                     </div>
 

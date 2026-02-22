@@ -258439,7 +258439,7 @@ const _334 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty
     },
     osmosis: {
       concentratedliquidity: {
-        v1beta1: new (await import("./query.lcd-b3f7d13a.js")).LCDQueryClient({
+        v1beta1: new (await import("./query.lcd-5fffd577.js")).LCDQueryClient({
           requestClient: n
         })
       },
@@ -258564,7 +258564,7 @@ const _334 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty
     },
     osmosis: {
       concentratedliquidity: {
-        v1beta1: (await import("./query.rpc.Query-6e521d1a.js")).createRpcQueryExtension(o)
+        v1beta1: (await import("./query.rpc.Query-714f290f.js")).createRpcQueryExtension(o)
       },
       cosmwasmpool: {
         v1beta1: (await Promise.resolve().then(() => _307)).createRpcQueryExtension(o)
@@ -258640,7 +258640,7 @@ const _334 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty
   },
   osmosis: {
     concentratedliquidity: {
-      v1beta1: new (await import("./tx.rpc.msg-7c612c16.js")).MsgClientImpl(e)
+      v1beta1: new (await import("./tx.rpc.msg-81deefcd.js")).MsgClientImpl(e)
     },
     gamm: {
       poolmodels: {
@@ -263491,7 +263491,7 @@ const tokens = [
 }, _hoisted_2 = {
   class: "modal-box modern-card rounded-xl shadow-modern",
   for: ""
-}, _hoisted_3 = /* @__PURE__ */ createStaticVNode('<div class="absolute right-4 top-4 flex items-center gap-2"><div class="dropdown dropdown-end dropdown-hover"><label tabindex="0" class="text-epix-teal hover:text-epix-primary transition-colors duration-200 cursor-pointer"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="w-5 h-5 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></label><div tabindex="0" class="card compact dropdown-content modern-card shadow-modern rounded-lg w-64 z-40"><div class="card-body"><ul class="text-right text-sm"><li>Liquidity is provided on Osmosis</li><li>Powered by Epix Explorer</li></ul></div></div></div><label for="PingTokenConvert" class="cursor-pointer text-gray-400 hover:text-white transition-colors duration-200"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg></label></div><h3 class="text-xl font-semibold gradient-text">Swap</h3>', 2), _hoisted_5 = {
+}, _hoisted_3 = /* @__PURE__ */ createStaticVNode('<div class="absolute right-4 top-4 flex items-center gap-2"><div class="dropdown dropdown-end dropdown-hover"><label tabindex="0" class="text-epix-teal hover:text-epix-primary transition-colors duration-200 cursor-pointer"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="w-5 h-5 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></label><div tabindex="0" class="card compact dropdown-content modern-card shadow-modern rounded-lg w-64 z-40"><div class="card-body"><ul class="text-right text-sm"><li>Liquidity is provided on Osmosis</li><li>Powered by Epix Explorer</li></ul></div></div></div><label for="PingTokenConvert" class="cursor-pointer text-gray-400 hover:text-white transition-colors duration-200"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg></label></div><h3 class="text-xl font-semibold gradient-text">Swap Epix</h3>', 2), _hoisted_5 = {
   key: 0,
   class: "text-error mt-3"
 }, _hoisted_6 = { class: "flex items-center relative h-14 bg-gray-100 dark:bg-epix-gray rounded-tl-lg rounded-tr-lg mt-4" }, _hoisted_7 = { class: "dropdown" }, _hoisted_8 = {
@@ -264286,7 +264286,7 @@ const tokens = [
                   onClick: en
                 }, [
                   J.value ? (openBlock(), createElementBlock("span", _hoisted_47)) : createCommentVNode("", !0),
-                  createTextVNode(" Swap Epix ")
+                  createTextVNode(" Swap ")
                 ], 8, _hoisted_46)
               ])),
               _hoisted_48
