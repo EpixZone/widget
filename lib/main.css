@@ -105,14 +105,12 @@ ping-tx-dialog .modern-button {
     font-weight: 600;
     padding: 12px 24px;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(138, 75, 219, 0.3);
 }
 
 ping-connect-wallet .modern-button:hover,
 ping-token-convert .modern-button:hover,
 ping-tx-dialog .modern-button:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(138, 75, 219, 0.4);
 }
 
 ping-connect-wallet .modern-button-secondary,

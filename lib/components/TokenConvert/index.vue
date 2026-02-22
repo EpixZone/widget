@@ -851,25 +851,32 @@ function fetchTx(tx: string) {
         <label for="PingTokenConvert" class="modal cursor-pointer">
             <label class="modal-box modern-card rounded-xl shadow-modern" for="">
                 <div v-show="view === 'swap'">
-                    <div class="absolute right-4 top-4 dropdown dropdown-end dropdown-hover">
-                        <label tabindex="0" class="text-epix-teal hover:text-epix-primary transition-colors duration-200">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                class="w-6 h-6 stroke-current">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                        </label>
-                        <div tabindex="0"
-                            class="card compact dropdown-content modern-card shadow-modern rounded-lg w-64 z-40">
-                            <div class="card-body">
-                                <ul class="text-right text-sm">
-                                    <li>Liquidity is provided on Osmosis</li>
-                                    <li>Powered by Epix Explorer</li>
-                                </ul>
+                    <div class="absolute right-4 top-4 flex items-center gap-2">
+                        <div class="dropdown dropdown-end dropdown-hover">
+                            <label tabindex="0" class="text-epix-teal hover:text-epix-primary transition-colors duration-200 cursor-pointer">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    class="w-5 h-5 stroke-current">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                            </label>
+                            <div tabindex="0"
+                                class="card compact dropdown-content modern-card shadow-modern rounded-lg w-64 z-40">
+                                <div class="card-body">
+                                    <ul class="text-right text-sm">
+                                        <li>Liquidity is provided on Osmosis</li>
+                                        <li>Powered by Epix Explorer</li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
+                        <label for="PingTokenConvert" class="cursor-pointer text-gray-400 hover:text-white transition-colors duration-200">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </label>
                     </div>
-                    <h3 class="text-xl font-semibold gradient-text">Token Convert</h3>
+                    <h3 class="text-xl font-semibold gradient-text">Swap</h3>
                     <div v-if="!osmosisPath || chainName === 'osmosis'" class="text-error mt-3">
                         <span>This feature is not available [{{
                             chainName
@@ -1017,7 +1024,7 @@ function fetchTx(tx: string) {
                         <button class="modern-button w-full ping-connect-confirm capitalize text-base hover-lift"
                             :disabled="disabled" @click="doSwap">
                             <span v-if="sending" class="loading loading-spinner"></span>
-                            Convert
+                            Swap Epix
                         </button>
                     </div>
 

@@ -1,7 +1,7 @@
 {
     "name": "@muddydev/epixzone-widget",
     "private": false,
-    "version": "0.3.28",
+    "version": "0.3.29",
     "type": "module",
     "main": "dist/widget.js",
     "author": {
