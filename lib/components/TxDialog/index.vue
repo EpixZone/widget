@@ -246,7 +246,17 @@ function viewTransaction() {
 }
 
 function showTitle() {
-    return (props.type || 'Sending Transaction').replace(/\_/g, ' ');
+    const titles: Record<string, string> = {
+        'delegate': 'Delegate',
+        'redelegate': 'Redelegate',
+        'unbond': 'Undelegate',
+        'cancel_unbond': 'Cancel Undelegation',
+        'cancelunbond': 'Cancel Undelegation',
+        'withdraw': 'Claim Rewards',
+        'withdraw_commission': 'Claim Commission',
+    };
+    const key = (props.type || '').toLowerCase();
+    return titles[key] || (props.type || 'Sending Transaction').replace(/\_/g, ' ');
 }
 
 const delay = ref(0);

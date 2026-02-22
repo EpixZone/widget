@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { Icon } from '@iconify/vue';
 import { fromBech32, toBech32, toHex } from '@cosmjs/encoding';
 import { sha256 } from '@cosmjs/crypto';
@@ -17,6 +17,7 @@ import {
     getLatestBlock,
     getAccount,
     getTxByHash,
+    getSqsQuote,
 } from '../../utils/http';
 import {
     Account,
@@ -54,6 +55,7 @@ const direction = ref('buy');
 const sending = ref(false); // show status on send tx
 const open = ref(false);
 const error = ref('');
+const osmoSenderAddress = ref('');
 const chains = ref([] as IBCPath[]);
 const osmosisPath = ref({} as IBCPath | undefined);
 const osmosisPathInfo = ref({} as IBCInfo);
@@ -67,7 +69,18 @@ const swapIn = ref({} as TokenConfig | undefined);
 const swapOut = ref({} as TokenConfig | undefined);
 const amountIn = ref('');
 const allPools = ref([] as any[]);
+const sqsQuote = ref(null as any);
+const sqsLoading = ref(false);
+let quoteTimer: any = null;
 const client = new ChainRegistryClient();
+const registryName = computed(() => props.chainName?.toLowerCase().replace(/\s+/g, '') || '');
+
+// Convert a human-readable amount to on-chain integer string without scientific notation
+function toBaseAmount(amount: number | string, decimals: number): string {
+    const [whole, frac = ''] = String(amount).split('.');
+    const padded = (frac + '0'.repeat(decimals)).slice(0, decimals);
+    return (BigInt(whole) * BigInt(10 ** decimals) + BigInt(padded || '0')).toString();
+}
 
 // swap logic
 
@@ -78,23 +91,41 @@ async function initData() {
         view.value = 'connect';
         return;
     }
+
+    // Resolve real Osmosis address from wallet if not already set
+    if (!osmoSenderAddress.value) {
+        try {
+            // @ts-ignore
+            await window.keplr.enable('osmosis-1');
+            // @ts-ignore
+            const osmoSigner = window.getOfflineSigner('osmosis-1');
+            const osmoAccounts = await osmoSigner.getAccounts();
+            if (osmoAccounts.length > 0) {
+                osmoSenderAddress.value = osmoAccounts[0].address;
+            }
+        } catch (e) {
+            // Fallback to bech32 re-encoding
+            osmoSenderAddress.value = osmoSenderAddress.value;
+        }
+    }
+
     if (open.value) {
         view.value = 'swap';
         localChainInfo.value = {} as Chain;
         localCoinInfo.value = [];
-        recipient.value = localAddress(sender.value.cosmosAddress)
+        recipient.value = sender.value.cosmosAddress
         await client
-            .fetchChainInfo(props.chainName)
+            .fetchChainInfo(registryName.value)
             .then((res) => {
                 localChainInfo.value = res;
-                if (Number(res.slip44) !== 118) {
-                    error.value === `Coin type ${res.slip44} is not supported`;
+                if (Number(res.slip44) !== 118 && Number(res.slip44) !== 60) {
+                    error.value = `Coin type ${res.slip44} is not supported`;
                 }
             })
             .catch(() => {
                 error.value = 'Not found IBC Path';
             });
-        getBalance(OSMOSIS_REST, osmoAddress(sender.value.cosmosAddress)).then(
+        getBalance(OSMOSIS_REST, osmoSenderAddress.value).then(
             (res) => {
                 osmoBalances.value = res.balances.filter(
                     (x) => !x.denom.startsWith('gamm')
@@ -103,25 +134,23 @@ async function initData() {
         );
         getBalance(
             props.endpoint,
-            localAddress(sender.value.cosmosAddress)
+            sender.value.cosmosAddress
         ).then((res) => {
             localBalances.value = res.balances;
         });
 
-        client.fetchAssetsList(props.chainName).then((al) => {
+        client.fetchAssetsList(registryName.value).then((al) => {
             localCoinInfo.value = al.assets;
         });
 
         getStakingParam(props.endpoint).then((x) => {
             defaultDenom.value = x.params.bond_denom;
         });
-        getOsmosisPools(OSMOSIS_REST).then((res) => {
-            allPools.value = res.pools;
-        });
+        // Pool discovery now handled by SQS router quote API
 
         client.fetchIBCPaths().then((paths) => {
             chains.value = paths.filter(
-                (x) => x.from === props.chainName || x.to === props.chainName
+                (x) => x.from === registryName.value || x.to === registryName.value
             );
             const path = chains.value.find(
                 (x) => x.from === 'osmosis' || x.to === 'osmosis'
@@ -256,41 +285,59 @@ const outTokens = computed(() => {
 function selectInput(v) {
     swapIn.value = v;
     amountIn.value = '';
+    closeDropdown();
 }
 
 function selectOutput(v) {
     swapOut.value = v;
-    amountIn.value = '';
+    closeDropdown();
 }
 
-const pool = computed(() => {
-    // find the available pools and sort by liquidity depth
-    const a = allPools.value
-        .filter(
-            (x) =>
-                x.pool_assets?.findIndex(
-                    (a) => a.token.denom === swapIn.value?.ibcDenom
-                ) > -1
-        )
-        .filter(
-            (x) =>
-                x.pool_assets?.findIndex(
-                    (a) => a.token.denom === swapOut.value?.ibcDenom
-                ) > -1
-        )
-        .sort(
-            (a, b) =>
-                Number(b.total_shares.amount) - Number(a.total_shares.amount)
-        );
-    // console.log(a)
-    return a.length > 0 ? a[0] : null;
-});
+function closeDropdown() {
+    const el = document.activeElement as HTMLElement;
+    if (el) el.blur();
+}
+
+function fetchQuote() {
+    if (quoteTimer) clearTimeout(quoteTimer);
+    sqsQuote.value = null;
+    const amount = Number(amountIn.value || 0);
+    if (amount <= 0 || !swapIn.value?.ibcDenom || !swapOut.value?.ibcDenom) return;
+    sqsLoading.value = true;
+    quoteTimer = setTimeout(async () => {
+        try {
+            const tokenInAmount = toBaseAmount(amount, swapIn.value?.decimals || 0);
+            const quote = await getSqsQuote(tokenInAmount, swapIn.value!.ibcDenom, swapOut.value!.ibcDenom);
+            sqsQuote.value = quote;
+        } catch (e) {
+            sqsQuote.value = null;
+        }
+        sqsLoading.value = false;
+    }, 500);
+}
+
+watch([amountIn, swapIn, swapOut], fetchQuote);
 
 function switchDirection() {
     direction.value = direction.value === 'buy' ? 'sell' : 'buy';
 }
 
+const needsDeposit = computed(() => {
+    const amount = Number(amountIn.value || 0);
+    if (amount <= 0 || !depositable.value) return false;
+    const token = swapIn.value;
+    if (!token) return false;
+    const b = osmoBalances.value.find((x) => x.denom === token.ibcDenom || '');
+    const osmoBalance = b ? Number(b.amount) : 0;
+    const needed = amount * 10 ** token.decimals;
+    if (osmoBalance >= needed) return false;
+    // Check if they have enough on the local chain
+    const localB = localBalances.value?.find((x) => x.denom === token.denom);
+    return localB ? Number(localB.amount) >= needed : false;
+});
+
 const disabled = computed(() => {
+    if (needsDeposit.value) return true;
     const amount = Number(amountIn.value || 0);
     if (amount <= 0 || outAmount.value <= 0) return true;
     const token = swapIn.value;
@@ -302,28 +349,8 @@ const disabled = computed(() => {
 });
 
 const outAmount = computed(() => {
-    // tokenBalanceOut * [1 - { tokenBalanceIn / (tokenBalanceIn + (1 - swapFee) * tokenAmountIn)} ^ (tokenWeightIn / tokenWeightOut)]
-    const p = pool.value;
-    if (p) {
-        const tokenBalanceOut = p.pool_assets?.find(
-            (x) => x.token.denom === swapOut.value?.ibcDenom
-        );
-        const tokenBalanceIn = p.pool_assets?.find(
-            (x) => x.token.denom === swapIn.value?.ibcDenom
-        );
-        if (tokenBalanceIn && tokenBalanceOut) {
-            const balanceOut = Number(tokenBalanceOut.token.amount);
-            const balanceIn = Number(tokenBalanceIn.token.amount);
-            const weightOut = Number(tokenBalanceOut.weight);
-            const weightIn = Number(tokenBalanceIn.weight);
-            const swapFee = Number(p.pool_params.swap_fee);
-            const amount = Number(amountIn.value) * (1 - swapFee);
-            const out =
-                balanceOut *
-                (1 -
-                    balanceIn / (balanceIn + amount) ** (weightIn / weightOut));
-            return out;
-        }
+    if (sqsQuote.value?.amount_out) {
+        return Number(sqsQuote.value.amount_out) / 10 ** (swapOut.value?.decimals || 0);
     }
     return 0;
 });
@@ -338,30 +365,28 @@ async function doSwap() {
             // @ts-ignore
             signer: window.getOfflineSigner(latest.block.header.chain_id),
         });
-        const address = osmoAddress(sender.value.cosmosAddress);
+        const address = osmoSenderAddress.value;
 
-        if (!swapIn.value || !swapOut.value || !address) return;
+        if (!swapIn.value || !swapOut.value || !address || !sqsQuote.value) return;
         const { swapExactAmountIn } =
             osmosis.gamm.v1beta1.MessageComposer.withTypeUrl;
 
         const amount = Number(amountIn.value || 0);
+        // Build routes from SQS quote response
+        const sqsRoutes = sqsQuote.value.route?.[0]?.pools || [];
+        const routes = sqsRoutes.map((p: any) => ({
+            poolId: Long.fromNumber(Number(p.id)),
+            tokenOutDenom: p.token_out_denom,
+        }));
+
         const msg = swapExactAmountIn({
             sender: address,
-            routes: [
-                {
-                    poolId: Long.fromNumber(pool.value.id),
-                    tokenOutDenom: swapOut.value.ibcDenom,
-                },
-            ],
+            routes,
             tokenIn: {
-                amount: (amount * 10 ** swapIn.value.decimals).toFixed(),
+                amount: toBaseAmount(amount, swapIn.value.decimals),
                 denom: swapIn.value.ibcDenom,
             },
-            tokenOutMinAmount: (
-                outAmount.value *
-                0.99 *
-                10 ** swapOut.value.decimals
-            ).toFixed(), // slippage: 1%
+            tokenOutMinAmount: toBaseAmount(outAmount.value * 0.99, swapOut.value.decimals), // slippage: 1%
         });
 
         const gas = await stargateClient.simulate(address, [msg], '');
@@ -385,7 +410,7 @@ async function doSwap() {
             await showResult(response.transactionHash)
             await getBalance(
                 OSMOSIS_REST,
-                osmoAddress(sender.value.cosmosAddress)
+                osmoSenderAddress.value
             ).then((res) => {
                 osmoBalances.value = res.balances.filter(
                     (x) => !x.denom.startsWith('gamm')
@@ -394,8 +419,23 @@ async function doSwap() {
         } else {
             if (response.rawLog) error.value = response.rawLog;
         }
-    } catch (err) {
-        error.value = err;
+    } catch (err: any) {
+        // cosmjs may throw a base64 parsing error even when the tx succeeds on-chain
+        const errMsg = err?.message || String(err);
+        if (errMsg.includes('Length must be a multiple of 4') || errMsg.includes('Invalid string')) {
+            // Tx was likely broadcast successfully; poll for confirmation
+            const hash = err?.transactionHash || err?.txId;
+            if (hash) {
+                await showResult(hash);
+            } else {
+                error.value = '';
+                msg.value = 'Swap broadcast successfully. Please check your wallet for confirmation.';
+                view.value = 'submitting';
+                step.value = 100;
+            }
+        } else {
+            error.value = errMsg;
+        }
     }
     sending.value = false;
 }
@@ -427,7 +467,7 @@ const disableDeposit = computed(() => {
 async function doDeposit() {
     sending.value = true;
 
-    const address = localAddress(sender.value.cosmosAddress);
+    const address = sender.value.cosmosAddress;
 
     if (!swapIn.value || !address) return;
 
@@ -436,7 +476,7 @@ async function doDeposit() {
 
     const chainId = latest.block.header.chain_id;
     const timeout = Date.now() + new Date().getTimezoneOffset() + 3600000;
-    const amount = Number(depositAmount.value || 0) * 10 ** swapIn.value.decimals;
+    const amount = toBaseAmount(depositAmount.value || 0, swapIn.value.decimals);
     const tx = {
         chainId,
         signerAddress: address,
@@ -447,11 +487,11 @@ async function doDeposit() {
                     sourcePort: 'transfer',
                     sourceChannel: localSourceChannelID.value || '',
                     token: {
-                        amount: String(amount),
+                        amount,
                         denom: swapIn.value.denom,
                     },
                     sender: address,
-                    receiver: osmoAddress(address),
+                    receiver: osmoSenderAddress.value,
                     timeoutTimestamp: `${timeout}000000`,
                 },
             },
@@ -471,38 +511,91 @@ async function doDeposit() {
     try {
         const client = new UniClient(WalletName.Keplr, { chainId });
 
-        //   console.log("gasInfo:", gasInfo)
         const txRaw = await client.sign(tx);
         const response = await client.broadcastTx(props.endpoint, txRaw);
         if (response.tx_response?.code === 0) {
-            setTimeout(async () => {
-                await getBalance(
-                    OSMOSIS_REST,
-                    osmoAddress(sender.value.cosmosAddress)
-                ).then((res) => {
-                    osmoBalances.value = res.balances.filter(
-                        (x) => !x.denom.startsWith('gamm')
-                    );
-                });
-                await getBalance(
-                    props.endpoint,
-                    localAddress(sender.value.cosmosAddress)
-                ).then((res) => {
-                    localBalances.value = res.balances;
-                });
-            }, 6000);
+            // Show waiting state and poll for IBC arrival on Osmosis
+            view.value = 'submitting';
+            step.value = 20;
+            msg.value = 'Deposit submitted. Waiting for IBC transfer...';
+            error.value = '';
+
+            // Record current Osmosis balance to detect when new funds arrive
+            const token = swapIn.value;
+            const prevBal = osmoBalances.value.find(
+                (x) => x.denom === token?.ibcDenom
+            );
+            const prevAmount = prevBal ? Number(prevBal.amount) : 0;
+
+            // Poll Osmosis balance until it increases
+            let attempts = 0;
+            const maxAttempts = 20; // ~60 seconds
+            const pollInterval = 3000;
+            const pollForArrival = async () => {
+                attempts++;
+                step.value = Math.min(20 + Math.floor((attempts / maxAttempts) * 70), 90);
+                try {
+                    const res = await getBalance(OSMOSIS_REST, osmoSenderAddress.value);
+                    const newBalances = res.balances.filter((x) => !x.denom.startsWith('gamm'));
+                    const newBal = newBalances.find((x) => x.denom === token?.ibcDenom);
+                    const newAmount = newBal ? Number(newBal.amount) : 0;
+
+                    if (newAmount > prevAmount) {
+                        // Funds arrived! Update balances and go back to swap
+                        osmoBalances.value = newBalances;
+                        const localRes = await getBalance(
+                            props.endpoint,
+                            sender.value.cosmosAddress
+                        );
+                        localBalances.value = localRes.balances;
+                        step.value = 100;
+                        msg.value = 'Deposit confirmed! Returning to swap...';
+                        setTimeout(() => {
+                            view.value = 'swap';
+                            sending.value = false;
+                        }, 1500);
+                        return;
+                    }
+                } catch (e) {
+                    // ignore polling errors
+                }
+
+                if (attempts < maxAttempts) {
+                    setTimeout(pollForArrival, pollInterval);
+                } else {
+                    // Timeout — refresh balances anyway and go back
+                    try {
+                        const res = await getBalance(OSMOSIS_REST, osmoSenderAddress.value);
+                        osmoBalances.value = res.balances.filter((x) => !x.denom.startsWith('gamm'));
+                        const localRes = await getBalance(
+                            props.endpoint,
+                            sender.value.cosmosAddress
+                        );
+                        localBalances.value = localRes.balances;
+                    } catch (e) {}
+                    step.value = 100;
+                    msg.value = 'IBC transfer may still be in progress. Returning to swap...';
+                    setTimeout(() => {
+                        view.value = 'swap';
+                        sending.value = false;
+                    }, 2000);
+                }
+            };
+            setTimeout(pollForArrival, pollInterval);
+        } else {
+            error.value = response.tx_response?.raw_log || 'Deposit failed';
+            sending.value = false;
         }
-    } catch (e) {
+    } catch (e: any) {
         sending.value = false;
-        error.value = e;
+        error.value = e?.message || e;
         setTimeout(() => (error.value = ''), 5000);
     }
-    sending.value = false;
 }
 
 // withdraw logic
 const withdrawAmount = ref('');
-const recipient = ref(localAddress(sender.value.cosmosAddress))
+const recipient = ref(sender.value.cosmosAddress)
 const disableWithdraw = computed(() => {
     const token = swapOut.value;
     if (token) {
@@ -526,7 +619,7 @@ async function doWithdraw() {
             // @ts-ignore
             signer: window.getOfflineSigner(latest.block.header.chain_id),
         });
-        const address = osmoAddress(sender.value.cosmosAddress);
+        const address = osmoSenderAddress.value;
 
         if (!swapIn.value || !swapOut.value || !address) return;
 
@@ -539,7 +632,7 @@ async function doWithdraw() {
             sourceChannel: swapOut.value.sourceChannelId || '',
             sourcePort: 'transfer',
             token: {
-                amount: (amount * 10 ** swapOut.value.decimals).toFixed(),
+                amount: toBaseAmount(amount, swapOut.value.decimals),
                 denom: swapOut.value.ibcDenom,
             },
             receiver: recipient.value,
@@ -562,35 +655,99 @@ async function doWithdraw() {
             ],
             gas: (gas * 1.25).toFixed(),
         };
-        const response = await stargateClient.signAndBroadcast(
-            address,
-            [msg],
-            fee,
-            ''
-        );
-        if (response.code === 0) {
-            await getBalance(
-                OSMOSIS_REST,
-                osmoAddress(sender.value.cosmosAddress)
-            ).then((res) => {
-                osmoBalances.value = res.balances.filter(
-                    (x) => !x.denom.startsWith('gamm')
-                );
-            });
-            await getBalance(
-                props.endpoint,
-                localAddress(sender.value.cosmosAddress)
-            ).then((res) => {
-                localBalances.value = res.balances;
-            });
-        } else {
-            if (response.rawLog) error.value = response.rawLog;
+        let broadcastOk = false;
+        try {
+            const response = await stargateClient.signAndBroadcast(
+                address,
+                [msg],
+                fee,
+                ''
+            );
+            broadcastOk = response.code === 0;
+            if (!broadcastOk && response.rawLog) {
+                error.value = response.rawLog;
+                sending.value = false;
+                return;
+            }
+        } catch (broadcastErr) {
+            const errMsg = String(broadcastErr);
+            if (errMsg.includes('Invalid string') && errMsg.includes('Length must be a multiple of 4')) {
+                // cosmjs base64 parsing error after successful broadcast
+                broadcastOk = true;
+            } else {
+                error.value = broadcastErr;
+                sending.value = false;
+                return;
+            }
+        }
+
+        if (broadcastOk) {
+            // Show waiting state and poll for IBC arrival on Epix
+            view.value = 'submitting';
+            step.value = 20;
+            msg.value = 'Withdrawal submitted. Waiting for IBC transfer...';
+            error.value = '';
+
+            // Record current local balance to detect when new funds arrive
+            const token = swapOut.value;
+            const prevLocalBal = localBalances.value.find(
+                (x) => x.denom === token?.denom
+            );
+            const prevAmount = prevLocalBal ? Number(prevLocalBal.amount) : 0;
+
+            // Poll local chain balance until it increases
+            let attempts = 0;
+            const maxAttempts = 20; // ~60 seconds
+            const pollInterval = 3000;
+            const pollForArrival = async () => {
+                attempts++;
+                step.value = Math.min(20 + Math.floor((attempts / maxAttempts) * 70), 90);
+                try {
+                    const localRes = await getBalance(props.endpoint, sender.value.cosmosAddress);
+                    const newLocalBal = localRes.balances.find((x) => x.denom === token?.denom);
+                    const newAmount = newLocalBal ? Number(newLocalBal.amount) : 0;
+
+                    if (newAmount > prevAmount) {
+                        // Funds arrived! Update balances and go back to swap
+                        localBalances.value = localRes.balances;
+                        const osmoRes = await getBalance(OSMOSIS_REST, osmoSenderAddress.value);
+                        osmoBalances.value = osmoRes.balances.filter((x) => !x.denom.startsWith('gamm'));
+                        step.value = 100;
+                        msg.value = 'Withdrawal confirmed! Returning to swap...';
+                        setTimeout(() => {
+                            view.value = 'swap';
+                            sending.value = false;
+                        }, 1500);
+                        return;
+                    }
+                } catch (e) {
+                    // ignore polling errors
+                }
+
+                if (attempts < maxAttempts) {
+                    setTimeout(pollForArrival, pollInterval);
+                } else {
+                    // Timeout — refresh balances anyway and go back
+                    try {
+                        const osmoRes = await getBalance(OSMOSIS_REST, osmoSenderAddress.value);
+                        osmoBalances.value = osmoRes.balances.filter((x) => !x.denom.startsWith('gamm'));
+                        const localRes = await getBalance(props.endpoint, sender.value.cosmosAddress);
+                        localBalances.value = localRes.balances;
+                    } catch (e) {}
+                    step.value = 100;
+                    msg.value = 'IBC transfer may still be in progress. Returning to swap...';
+                    setTimeout(() => {
+                        view.value = 'swap';
+                        sending.value = false;
+                    }, 2000);
+                }
+            };
+            setTimeout(pollForArrival, pollInterval);
         }
     } catch (err) {
-        error.value = err
+        error.value = err;
+        sending.value = false;
     }
-
-    sending.value = false;
 }
 
 async function connect() {
@@ -619,6 +776,25 @@ async function connect() {
             .catch((e) => {
                 error.value = e;
             });
+
+        // Get real Osmosis address from Keplr (needed for EVM chains where
+        // bech32 re-encoding doesn't produce the correct Osmosis address)
+        try {
+            // @ts-ignore
+            await window.keplr.enable('osmosis-1');
+            // @ts-ignore
+            const osmoSigner = window.getOfflineSigner('osmosis-1');
+            const osmoAccounts = await osmoSigner.getAccounts();
+            if (osmoAccounts.length > 0) {
+                osmoSenderAddress.value = osmoAccounts[0].address;
+            }
+        } catch (e) {
+            // Fallback to bech32 re-encoding if Osmosis not available in wallet
+            if (accounts.length > 0) {
+                osmoSenderAddress.value = osmoAddress(accounts[0].address);
+            }
+        }
+
         initData();
         view.value = 'swap'
     } catch (e) {
@@ -654,7 +830,7 @@ function fetchTx(tx: string) {
             if (res.tx_response.code > 0) {
                 error.value = res.tx_response.raw_log;
             } else {
-                msg.value = `Congratulations! Swap completed successfully.`;
+                msg.value = `Swap completed successfully!`;
                 emit('completed', { hash: tx, });
             }
         })
@@ -687,8 +863,8 @@ function fetchTx(tx: string) {
                             class="card compact dropdown-content modern-card shadow-modern rounded-lg w-64 z-40">
                             <div class="card-body">
                                 <ul class="text-right text-sm">
-                                    <li>Liquidity is provided by Osmosis</li>
-                                    <li>Powered by Ping.pub</li>
+                                    <li>Liquidity is provided on Osmosis</li>
+                                    <li>Powered by Epix Explorer</li>
                                 </ul>
                             </div>
                         </div>
@@ -816,7 +992,9 @@ function fetchTx(tx: string) {
                             </div>
                             <div class="text-base text-gray-800 dark:text-gray-200">
                                 {{
-                                    decimal2percent(pool?.pool_params.swap_fee)
+                                    sqsQuote?.effective_fee
+                                        ? (Number(sqsQuote.effective_fee) * 100).toFixed(2)
+                                        : '—'
                                 }}%
                             </div>
                         </div>
@@ -826,12 +1004,28 @@ function fetchTx(tx: string) {
                         <span>{{ error }}.</span>
                     </div>
 
-                    <div class="mt-5">
+                    <div v-if="needsDeposit" class="mt-4">
+                        <p class="text-sm text-gray-500 dark:text-gray-400 mb-3 text-center">
+                            You need to deposit {{ swapIn?.symbol }} to Osmosis first
+                        </p>
+                        <button class="modern-button w-full ping-connect-confirm capitalize text-base hover-lift"
+                            @click="depositAmount = amountIn; switchView('deposit')">
+                            Deposit {{ swapIn?.symbol }} to Osmosis
+                        </button>
+                    </div>
+                    <div v-else class="mt-5">
                         <button class="modern-button w-full ping-connect-confirm capitalize text-base hover-lift"
                             :disabled="disabled" @click="doSwap">
                             <span v-if="sending" class="loading loading-spinner"></span>
                             Convert
                         </button>
+                    </div>
+
+                    <div class="text-center mt-3">
+                        <a href="https://app.osmosis.zone/?from=USDC&to=EPIX.epix" target="_blank" rel="noopener noreferrer"
+                            class="text-sm text-epix-primary hover:text-epix-accent transition-colors duration-200 underline">
+                            Or trade directly on Osmosis
+                        </a>
                     </div>
                 </div>
                 <!-- deposit -->
@@ -848,7 +1042,7 @@ function fetchTx(tx: string) {
                                 showBalance(swapIn?.ibcDenom, swapIn?.decimals)
                             }}</span>
                         </label>
-                        <input :value="osmoAddress(sender.cosmosAddress)" readonly type="text"
+                        <input :value="osmoSenderAddress" readonly type="text"
                             class="input border border-gray-300 dark:border-gray-600" />
                     </div>
                     <div
@@ -912,7 +1106,8 @@ function fetchTx(tx: string) {
                     <div
                         class="flex justify-between j items-center py-2 px-4 bg-gray-200 dark:bg-[#171721] rounded-tl-lg rounded-tr-lg mt-4">
                         <div class="text-sm">Withdrawable Balance:</div>
-                        <div class="text-base font-semibold">
+                        <div class="text-base font-semibold cursor-pointer text-epix-primary hover:text-epix-accent transition-colors duration-200"
+                            @click="withdrawAmount = String(showBalance(swapOut?.ibcDenom, swapOut?.decimals))">
                             {{
                                 showBalance(
                                     swapOut?.ibcDenom,

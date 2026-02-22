@@ -147,6 +147,13 @@ export async function getOsmosisPools(endpoint: string) {
     const url = `${endpoint}/osmosis/gamm/v1beta1/pools?pagination.limit=1000`
     return get(url)
 }
+
+export async function getSqsQuote(tokenInAmount: string, tokenInDenom: string, tokenOutDenom: string) {
+    const tokenIn = encodeURIComponent(`${tokenInAmount}${tokenInDenom}`)
+    const tokenOut = encodeURIComponent(tokenOutDenom)
+    const url = `https://sqs.osmosis.zone/router/quote?tokenIn=${tokenIn}&tokenOutDenom=${tokenOut}`
+    return get(url)
+}
 // https://lcd.osmosis.zone
 // /osmosis/gamm/v1beta1/{pool_id}/estimate/swap_exact_amount_in
 export async function estimateSwapAmountIn(endpoint: string, poolId: string, token: Coin) {
