@@ -1,3 +1,4 @@
+import { MsgCancelUnbondingDelegation } from "cosmjs-types/cosmos/staking/v1beta1/tx";
 import { EncodeObject } from "@cosmjs/proto-signing"
 import { 
     createMsgWithdrawDelegatorReward, 
@@ -93,6 +94,26 @@ export class UndelegateMessageAdapter implements MessageAdapter {
     }
 }
 
+export class CancelUnbondingMessageAdapter implements MessageAdapter {
+    toProto(message: EncodeObject) {
+        return {
+            path: "cosmos.staking.v1beta1.MsgCancelUnbondingDelegation",
+            message: { serializeBinary: () => MsgCancelUnbondingDelegation.encode(message.value).finish() },
+        };
+    }
+    getTypes() {
+        return {
+            MsgValue: [
+                { name: "delegator_address", type: "string" },
+                { name: "validator_address", type: "string" },
+                { name: "amount", type: "TypeAmount" },
+                { name: "creation_height", type: "string" },
+            ],
+            TypeAmount: [{ name: "denom", type: "string" }, { name: "amount", type: "string" }],
+        };
+    }
+}
+
 export class VoteMessageAdapter implements MessageAdapter {
     toProto(message: EncodeObject) {
         const param = message.value
@@ -125,6 +146,7 @@ export class IBCMessageAdapter implements MessageAdapter {
 
 
 export const defaultMessageAdapter: Record<string, MessageAdapter> = {
+    "/cosmos.staking.v1beta1.MsgCancelUnbondingDelegation": new CancelUnbondingMessageAdapter(),
     "/cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward": new WithdrawMessageAdapter(),
     "/cosmos.staking.v1beta1.MsgDelegate": new DelegateMessageAdapter(),
     "/cosmos.staking.v1beta1.MsgBeginRedelegate": new BeginRedelegateMessageAdapter(),

@@ -1,5 +1,7 @@
+import { createAminoConverters } from "../amino";
+import { makeSignDoc, makeSignDocAmino } from "../signing";
 import { fromBase64, fromHex } from '@cosmjs/encoding';
-import { makeAuthInfoBytes, makeSignBytes, makeSignDoc, Registry, TxBodyEncodeObject } from '@cosmjs/proto-signing';
+import { makeAuthInfoBytes, makeSignBytes, Registry, TxBodyEncodeObject } from '@cosmjs/proto-signing';
 
 import { serializeSignDoc } from '@cosmjs/amino/build/signdoc';
 
@@ -9,8 +11,7 @@ import { TxRaw } from 'cosmjs-types/cosmos/tx/v1beta1/tx';
 import { Any } from 'cosmjs-types/google/protobuf/any';
 import { PubKey } from 'cosmjs-types/cosmos/crypto/secp256k1/keys';
 import { SignMode } from 'cosmjs-types/cosmos/tx/signing/v1beta1/signing';
-import { AminoTypes, createDefaultAminoConverters, createIbcAminoConverters } from '@cosmjs/stargate';
-import { makeSignDoc as makeSignDocAmino } from '@cosmjs/amino';
+import { AminoTypes, createIbcAminoConverters } from '@cosmjs/stargate';
 import { createWasmAminoConverters } from '@cosmjs/cosmwasm-stargate';
 import { Buffer } from 'buffer';
 
@@ -21,7 +22,7 @@ export class OKXWallet implements AbstractWallet {
   registry: Registry;
   conf: WalletArgument;
   aminoTypes = new AminoTypes({
-    ...createDefaultAminoConverters(),
+    ...createAminoConverters(),
     ...createIbcAminoConverters(),
     ...createWasmAminoConverters(),
   });
@@ -99,7 +100,7 @@ export class OKXWallet implements AbstractWallet {
     const txBodyBytes = this.registry.encode(txBodyEncodeObject);
     const gasLimit = Number(transaction.fee.gas);
     const authInfoBytes = makeAuthInfoBytes(
-      [{ pubkey, sequence: transaction.signerData.sequence }],
+      [{ pubkey, sequence: BigInt(transaction.signerData.sequence) }],
       transaction.fee.amount,
       gasLimit,
       transaction.fee.granter,
@@ -183,7 +184,7 @@ export class OKXWallet implements AbstractWallet {
     const signedTxBodyBytes = this.registry.encode(signedTxBodyEncodeObject);
 
     const signedGasLimit = Number(signed.fee.gas);
-    const signedSequence = Number(signed.sequence);
+    const signedSequence = BigInt(signed.sequence);
     const signedAuthInfoBytes = makeAuthInfoBytes(
       [{ pubkey, sequence: signedSequence }],
       signed.fee.amount,

@@ -195,8 +195,8 @@ async function sendTx() {
             },
             memo: memo.value,
             signerData: {
-                accountNumber: Number(acc.account.account_number),
-                sequence: Number(acc.account.sequence),
+                accountNumber: acc.account.account_number,
+                sequence: acc.account.sequence,
                 chainId: chainId.value,
             },
         };

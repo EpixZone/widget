@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import { PropType, computed, ref } from 'vue';
-import { Coin, CoinMetadata } from '../../../utils/type';
+import { PropType, computed, ref, watch } from 'vue';
+import BigNumber from 'bignumber.js';
+import { CoinMetadata } from '../../../utils/type';
 import { TokenUnitConverter } from '../../../utils/TokenUnitConverter';
 import { getStakingParam } from '../../../utils/http';
 
@@ -14,13 +15,12 @@ const props = defineProps({
 const params = computed(() => JSON.parse(props.params || "{}"))
 const amount = ref("")
 const amountDenom = ref("")
-const error = ref("")
-const stakingDenom = ref("")
+const stakingDenom = ref(params.value.bond_denom || "")
 
-// The params should contain validator_address, creation_height, and initial_balance from the unbonding entry
+// Cancel only the remaining balance of this specific unbonding entry.
 const validatorAddress = computed(() => params.value.validator_address || "")
 const creationHeight = computed(() => params.value.creation_height || "")
-const initialBalance = computed(() => params.value.initial_balance || "")
+const remainingBalance = computed(() => params.value.balance || "0")
 
 const msgs = computed(() => {
     const convert = new TokenUnitConverter(props.metadata)
@@ -33,83 +33,56 @@ const msgs = computed(() => {
                 amount: String(amount.value),
                 denom: amountDenom.value,
             }),
-            creationHeight: creationHeight.value,
+            creationHeight: BigInt(creationHeight.value),
         },
     }]
 })
 
 const units = computed(() => {
-    if (!props.metadata || !props.metadata[stakingDenom.value]) {
-        amountDenom.value = stakingDenom.value;
-        return [{ denom: stakingDenom.value, exponent: 0, aliases: [] }];
-    }
-    const list = props.metadata[stakingDenom.value].denom_units.sort(
-        (a, b) => b.exponent - a.exponent
-    );
-    if (list.length > 0) amountDenom.value = list[0].denom;
-    return list;
-})
-
-const isValid = computed(() => {
-    let ok = true
-    let error = ""
-    if (!props.sender) {
-        ok = false
-        error = "Sender is empty"
-    }
-    if (!validatorAddress.value) {
-        ok = false
-        error = "Validator address is empty"
-    }
-    if (!creationHeight.value) {
-        ok = false
-        error = "Creation height is empty"
-    }
-    if (!(Number(amount.value) > 0)) {
-        ok = false
-        error = "Amount should be greater than 0"
-    }
-    if (!amountDenom.value) {
-        ok = false
-        error = "Amount denomination is empty"
-    }
-    
-    // Validate that amount doesn't exceed initial balance
-    const convert = new TokenUnitConverter(props.metadata);
-    const initialBalanceDisplay = convert.baseToUnit(
-        { amount: initialBalance.value, denom: stakingDenom.value },
-        amountDenom.value
-    );
-    
-    if (Number(amount.value) > Number(initialBalanceDisplay.amount)) {
-        ok = false
-        error = `Amount cannot exceed initial unbonding balance of ${initialBalanceDisplay.amount} ${amountDenom.value}`
-    }
-    
-    return { ok, error }
-})
+    const list = props.metadata?.[stakingDenom.value]?.denom_units;
+    return list ? [...list].sort((a, b) => b.exponent - a.exponent)
+        : [{ denom: stakingDenom.value, exponent: 0, aliases: [] }];
+});
 
 const available = computed(() => {
     const convert = new TokenUnitConverter(props.metadata);
-    const base = { amount: initialBalance.value, denom: stakingDenom.value }
-    return {
-        base,
-        display: convert.baseToUnit(base, amountDenom.value),
-    };
+    const base = { amount: remainingBalance.value, denom: stakingDenom.value };
+    return { base, display: convert.baseToUnit(base, amountDenom.value) };
 });
 
-function initial() {
-    // Fetch staking parameters to get the correct denomination
-    getStakingParam(props.endpoint).then((x) => {
-        stakingDenom.value = x.params.bond_denom;
+// Metadata can arrive after staking parameters. Keep the selected amount in
+// the same base units when its display denomination changes.
+watch(units, (list) => {
+    const convert = new TokenUnitConverter(props.metadata);
+    const base = amount.value && amountDenom.value
+        ? convert.displayToBase(stakingDenom.value, { amount: amount.value, denom: amountDenom.value })
+        : available.value.base;
+    amountDenom.value = list[0]?.denom || stakingDenom.value;
+    amount.value = convert.baseToUnit(base, amountDenom.value).amount;
+}, { immediate: true });
 
-        // Set default amount to the full initial balance after staking denom is loaded
-        setTimeout(() => {
-            if (available.value.display) {
-                amount.value = available.value.display.amount
-            }
-        }, 100);
-    });
+const isValid = computed(() => {
+    if (!props.sender) return { ok: false, error: "Sender is empty" };
+    if (!validatorAddress.value) return { ok: false, error: "Validator address is empty" };
+    if (!/^[1-9]\d*$/.test(String(creationHeight.value)) || BigInt(creationHeight.value) > 9223372036854775807n)
+        return { ok: false, error: "Creation height is invalid" };
+    if (!amountDenom.value || !stakingDenom.value) return { ok: false, error: "Amount denomination is empty" };
+    const base = new TokenUnitConverter(props.metadata).displayToBase(stakingDenom.value,
+        { amount: amount.value, denom: amountDenom.value });
+    const value = new BigNumber(base.amount);
+    if (!value.isFinite() || !value.isInteger() || !value.gt(0))
+        return { ok: false, error: "Enter a positive amount in whole base units" };
+    if (value.gt(remainingBalance.value))
+        return { ok: false, error: "Amount cannot exceed the remaining unbonding balance" };
+    return { ok: true, error: "" };
+});
+
+async function initial() {
+    if (!stakingDenom.value) {
+        const response = await getStakingParam(props.endpoint);
+        stakingDenom.value = response.params.bond_denom;
+    }
+    amount.value = available.value.display.amount;
 }
 
 defineExpose({ msgs, isValid, initial })
@@ -172,7 +145,7 @@ defineExpose({ msgs, isValid, initial })
             </label>
         </div>
         
-        <div v-if="error" class="text-error mt-2">{{ error }}</div>
+        <div v-if="!isValid.ok" class="text-error mt-2">{{ isValid.error }}</div>
         
         <div class="mt-4 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
             <div class="flex items-start">

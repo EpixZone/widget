@@ -14,20 +14,20 @@ export class TokenUnitConverter {
         if(!meta) return token
         const unit = meta.denom_units.find(unit => unit.denom === meta.display)
         if(!unit) return token
-        const amount = BigNumber(Number(token.amount)).div(BigNumber(10).pow(unit.exponent))  
+        const amount = BigNumber(token.amount).div(BigNumber(10).pow(unit.exponent))
         return {
             amount: amount.toFixed(decimal),
             denom: unit.denom.toUpperCase()
         }
     }
-    baseToUnit(token: Coin, unitName: string, decimal = 6) {
+    baseToUnit(token: Coin, unitName: string, decimal?: number) {
         const meta = this.metadata[token.denom]
         if(!meta) return token
         const unit = meta.denom_units.find(unit => unit.denom === unitName)
         if(!unit) return token
-        const amount = BigNumber(Number(token.amount)).div(BigNumber(10).pow(unit.exponent))  
+        const amount = BigNumber(token.amount).div(BigNumber(10).pow(unit.exponent))
         return {
-            amount: parseFloat(amount.toFixed(decimal)).toString(),
+            amount: decimal === undefined ? amount.toFixed() : amount.toFixed(decimal),
             denom: unit.denom
         }
     }
@@ -36,7 +36,7 @@ export class TokenUnitConverter {
         if(!meta) return display
         const unit = meta.denom_units.find(unit => unit.denom === display.denom)
         if(!unit) return display
-        const amount = BigNumber(Number(display.amount)).times(BigNumber(10).pow(unit.exponent))
+        const amount = BigNumber(display.amount).times(BigNumber(10).pow(unit.exponent))
         return {
             amount: amount.toFixed(),
             denom: baseDenom
