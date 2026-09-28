@@ -1,7 +1,9 @@
+import { createAminoConverters } from "../amino";
+import { makeSignDocAmino } from "../signing";
 import { fromBase64, fromBech32, toHex, toBech32, toBase64 } from "@cosmjs/encoding";
 import { Registry, TxBodyEncodeObject, encodePubkey, makeAuthInfoBytes } from "@cosmjs/proto-signing"
 import { AbstractWallet, Account, DEFAULT_HDPATH, WalletArgument, WalletName, extractChainId } from "../Wallet"
-import { AminoTypes, createDefaultAminoConverters } from "@cosmjs/stargate"
+import { AminoTypes } from "@cosmjs/stargate"
 import TransportWebUSB from "@ledgerhq/hw-transport-webusb"
 import TransportWebBLE from "@ledgerhq/hw-transport-web-ble"
 import { LedgerSigner } from "@cosmjs/ledger-amino"
@@ -10,7 +12,7 @@ import { Chain, createTxRawEIP712, signatureToWeb3Extension } from "@tharsis/tra
 import { createEIP712, generateFee, generateMessageWithMultipleTransactions, generateTypes } from "@tharsis/eip712";
 import { defaultMessageAdapter } from "../EthermintMessageAdapter";
 import { createTransactionWithMultipleMessages } from "@tharsis/proto";
-import { encodeSecp256k1Pubkey, makeSignDoc as makeSignDocAmino } from "@cosmjs/amino";
+import { encodeSecp256k1Pubkey } from "@cosmjs/amino";
 import { TxRaw } from "cosmjs-types/cosmos/tx/v1beta1/tx";
 import { stringToPath } from '@cosmjs/crypto'
 import { SignMode } from "cosmjs-types/cosmos/tx/signing/v1beta1/signing";
@@ -22,7 +24,7 @@ export class LedgerWallet implements AbstractWallet {
     transport: string
     hdPath: string
     registry: Registry
-    aminoTypes = new AminoTypes({...createDefaultAminoConverters(), ...createWasmAminoConverters()})
+    aminoTypes = new AminoTypes({...createAminoConverters(), ...createWasmAminoConverters()})
     conf: WalletArgument
     constructor(arg: WalletArgument, registry: Registry) {
         this.transport = arg.transport || 'usb'
@@ -98,7 +100,7 @@ export class LedgerWallet implements AbstractWallet {
         }
         const sender = {
             accountAddress: tx.signerAddress,
-            sequence: tx.signerData.sequence,
+            sequence: BigInt(tx.signerData.sequence),
             accountNumber: tx.signerData.accountNumber,
             pubkey: toBase64(account[0].pubkey),
         }
@@ -184,7 +186,7 @@ export class LedgerWallet implements AbstractWallet {
         const signedTxBodyBytes = this.registry.encode(signedTxBodyEncodeObject);
 
         const signedGasLimit = Number(signed.fee.gas);
-        const signedSequence = Number(signed.sequence);
+        const signedSequence = BigInt(signed.sequence);
         const signedAuthInfoBytes = makeAuthInfoBytes(
             [{ pubkey, sequence: signedSequence }],
             signed.fee.amount,

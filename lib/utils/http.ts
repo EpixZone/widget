@@ -1,3 +1,4 @@
+import { uint64 } from "../wallet/signing";
 import fetch from 'cross-fetch'
 import { Coin, CoinMetadata, TxResponse } from './type'
 
@@ -36,7 +37,7 @@ function findField(obj: any, name: string) {
         if(Array.isArray(field)) continue
 
         const sub = findField(field, name)
-        if(sub) return sub
+        if(sub !== undefined) return sub
     }
     return undefined
 }
@@ -53,8 +54,8 @@ export async function getAccount(endpoint: string, address: string) {
         const res = await get(url)
         return {
             account: {
-                account_number: findField(res, "account_number"),
-                sequence: findField(res, "sequence")
+                account_number: uint64(findField(res, "account_number")),
+                sequence: uint64(findField(res, "sequence"))
             }
         }      
     }catch(err) {

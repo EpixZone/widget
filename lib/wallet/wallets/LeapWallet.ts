@@ -1,13 +1,15 @@
+import { createAminoConverters } from "../amino";
+import { makeSignDoc, makeSignDocAmino } from "../signing";
 import { fromBase64, fromBech32, toHex } from "@cosmjs/encoding";
-import { OfflineSigner, Registry, TxBodyEncodeObject, encodePubkey, makeAuthInfoBytes, makeSignDoc } from "@cosmjs/proto-signing"
+import { OfflineSigner, Registry, TxBodyEncodeObject, encodePubkey, makeAuthInfoBytes } from "@cosmjs/proto-signing"
 import { AbstractWallet, Account, WalletArgument, WalletName, keyType } from "../Wallet"
 import { Transaction } from "../../utils/type"
 import { TxRaw } from "cosmjs-types/cosmos/tx/v1beta1/tx";
 import { Any } from "cosmjs-types/google/protobuf/any";
 import { PubKey } from 'cosmjs-types/cosmos/crypto/secp256k1/keys'
 import { SignMode } from "cosmjs-types/cosmos/tx/signing/v1beta1/signing";
-import { AminoTypes, createDefaultAminoConverters } from "@cosmjs/stargate";
-import { encodeSecp256k1Pubkey, makeSignDoc as makeSignDocAmino } from "@cosmjs/amino";
+import { AminoTypes } from "@cosmjs/stargate";
+import { encodeSecp256k1Pubkey } from "@cosmjs/amino";
 import { createWasmAminoConverters } from "@cosmjs/cosmwasm-stargate";
 
 export class LeapWallet implements AbstractWallet {
@@ -16,7 +18,7 @@ export class LeapWallet implements AbstractWallet {
     registry: Registry
     conf: WalletArgument
     signer: OfflineSigner
-    aminoTypes = new AminoTypes( {...createDefaultAminoConverters(), ...createWasmAminoConverters()})
+    aminoTypes = new AminoTypes( {...createAminoConverters(), ...createWasmAminoConverters()})
     constructor(arg: WalletArgument, registry: Registry) {
         this.chainId = arg.chainId || "cosmoshub"
         // @ts-ignore
@@ -69,7 +71,7 @@ export class LeapWallet implements AbstractWallet {
         const txBodyBytes = this.registry.encode(txBodyEncodeObject);
         const gasLimit = Number(transaction.fee.gas);
         const authInfoBytes = makeAuthInfoBytes(
-            [{ pubkey, sequence: transaction.signerData.sequence }],
+            [{ pubkey, sequence: BigInt(transaction.signerData.sequence) }],
             transaction.fee.amount,
             gasLimit,
             transaction.fee.granter,
@@ -123,7 +125,7 @@ export class LeapWallet implements AbstractWallet {
         const signedTxBodyBytes = this.registry.encode(signedTxBodyEncodeObject);
 
         const signedGasLimit = Number(signed.fee.gas);
-        const signedSequence = Number(signed.sequence);
+        const signedSequence = BigInt(signed.sequence);
         const signedAuthInfoBytes = makeAuthInfoBytes(
             [{ pubkey, sequence: signedSequence }],
             signed.fee.amount,

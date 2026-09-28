@@ -1,3 +1,4 @@
+import { createAminoConverters } from "../amino";
 import { AbstractWallet, Account, WalletArgument, WalletName, extractChainId, keyType } from '../Wallet';
 import { fromBase64, fromBech32, toHex, fromHex, toBase64 } from '@cosmjs/encoding';
 import {
@@ -10,7 +11,7 @@ import { TxRaw } from 'cosmjs-types/cosmos/tx/v1beta1/tx';
 import { hashMessage } from '@ethersproject/hash';
 import { computePublicKey, recoverPublicKey } from '@ethersproject/signing-key';
 import { ethToEthermint, ethermintToEth } from '../../utils/format';
-import { AminoTypes, createDefaultAminoConverters } from "@cosmjs/stargate"
+import { AminoTypes } from "@cosmjs/stargate"
 import { Chain, createTxRawEIP712, signatureToWeb3Extension } from "@tharsis/transactions";
 import { createEIP712, generateFee, generateMessageWithMultipleTransactions, generateTypes } from "@tharsis/eip712";
 import { defaultMessageAdapter } from '../EthermintMessageAdapter';
@@ -22,7 +23,7 @@ export class MetamaskWallet implements AbstractWallet {
     chainId: string;
     registry: Registry;
     prefix: string;
-    aminoTypes = new AminoTypes(createDefaultAminoConverters())
+    aminoTypes = new AminoTypes(createAminoConverters())
 
     constructor(arg: WalletArgument, registry: Registry) {
         this.chainId = arg.chainId || 'cosmoshub';
@@ -103,7 +104,7 @@ export class MetamaskWallet implements AbstractWallet {
 
         const sender = {
             accountAddress: transaction.signerAddress,
-            sequence: transaction.signerData.sequence,
+            sequence: BigInt(transaction.signerData.sequence),
             accountNumber: transaction.signerData.accountNumber,
             pubkey: pubkeyBytes,
         }
@@ -154,7 +155,7 @@ export class MetamaskWallet implements AbstractWallet {
             }).finish()
         })
         const authInfoBytes = makeAuthInfoBytes(
-            [{ pubkey, sequence: signerData.sequence }],
+            [{ pubkey, sequence: BigInt(signerData.sequence) }],
             fee.amount,
             Number(fee.gas),
             undefined, // feeGranter

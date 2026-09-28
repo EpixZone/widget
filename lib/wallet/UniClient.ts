@@ -63,7 +63,7 @@ export class UniClient {
         const txBodyBytes = this.registry.encode(txBodyEncodeObject);
         const gasLimit = Number(transaction.fee.gas);
         const authInfoBytes = makeAuthInfoBytes(
-            [{ pubkey, sequence: transaction.signerData.sequence }],
+            [{ pubkey, sequence: BigInt(transaction.signerData.sequence) }],
             transaction.fee.amount,
             gasLimit,
             transaction.fee.granter,

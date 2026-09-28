@@ -1,3 +1,4 @@
+import { makeSignDoc } from "../signing";
 import {
     AbstractWallet,
     Account,
@@ -14,7 +15,6 @@ import {
     Registry,
     TxBodyEncodeObject,
     makeAuthInfoBytes,
-    makeSignDoc,
 } from '@cosmjs/proto-signing';
 import { Transaction } from '../../utils/type';
 import { TxRaw } from 'cosmjs-types/cosmos/tx/v1beta1/tx';
@@ -80,7 +80,7 @@ export class MetamaskSnapWallet implements AbstractWallet {
         const gasLimit = Number(transaction.fee.gas);
 
         const authInfoBytes = makeAuthInfoBytes(
-            [{ pubkey, sequence: transaction.signerData.sequence }],
+            [{ pubkey, sequence: BigInt(transaction.signerData.sequence) }],
             transaction.fee.amount,
             gasLimit,
             transaction.fee.granter,
