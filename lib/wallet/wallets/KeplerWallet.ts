@@ -1,7 +1,8 @@
+import { makeAuthInfoBytes, makeTxBodyBytes } from "../signing";
 import { createAminoConverters } from "../amino";
-import { makeSignDoc, makeSignDocAmino } from "../signing";
+import { makeSignDoc, makeSignDocAmino, assertDirectSignIdentity, assertAminoSignIdentity } from "../signing";
 import { fromBase64, fromBech32, toHex } from "@cosmjs/encoding";
-import { Registry, TxBodyEncodeObject, encodePubkey, makeAuthInfoBytes } from "@cosmjs/proto-signing"
+import { Registry,  encodePubkey} from "@cosmjs/proto-signing"
 import { AbstractWallet, Account, WalletArgument, WalletName, keyType } from "../Wallet"
 import { Transaction } from "../../utils/type"
 import { TxRaw } from "cosmjs-types/cosmos/tx/v1beta1/tx";
@@ -43,6 +44,13 @@ export class KeplerWallet implements AbstractWallet {
         return this.conf.hdPath && this.conf.hdPath.startsWith("m/44'/60")
     }
     async sign(transaction: Transaction): Promise<TxRaw> {
+        if (transaction.messages.some(message => message.typeUrl.startsWith('/cosmos.authz.'))) {
+            await this.getAccounts();
+            // Select the available API before signing; never retry a rejected signature in another mode.
+            // @ts-ignore
+            const signer = window.getOfflineSigner(this.chainId);
+            if (typeof signer.signDirect !== 'function' && typeof signer.signAmino === 'function') return this.signAmino(transaction);
+        }
         // sign wasm tx with signDirect
         // if(transaction.messages.findIndex(x => x.typeUrl.startsWith("/cosmwasm.wasm")) > -1) {
         //     return this.signDirect(transaction)
@@ -64,14 +72,7 @@ export class KeplerWallet implements AbstractWallet {
                 key: accountFromSigner.pubkey,
             }).finish()
         })
-        const txBodyEncodeObject: TxBodyEncodeObject = {
-            typeUrl: "/cosmos.tx.v1beta1.TxBody",
-            value: {
-                messages: transaction.messages,
-                memo: transaction.memo,
-            },
-        };
-        const txBodyBytes = this.registry.encode(txBodyEncodeObject);
+        const txBodyBytes = makeTxBodyBytes(this.registry, transaction.messages, transaction.memo, transaction.timeoutHeight);
         const gasLimit = Number(transaction.fee.gas);
         const authInfoBytes = makeAuthInfoBytes(
             [{ pubkey, sequence: BigInt(transaction.signerData.sequence) }],
@@ -84,7 +85,9 @@ export class KeplerWallet implements AbstractWallet {
 
         // @ts-ignore
         const offlineSigner = window.getOfflineSigner(this.chainId)
+        if (typeof offlineSigner.signDirect !== 'function') throw new Error('This wallet account cannot sign direct transactions. Select a compatible account.');
         const { signature, signed } = await offlineSigner.signDirect(transaction.signerAddress, signDoc);;
+        assertDirectSignIdentity(signed, signDoc);
         return TxRaw.fromPartial({
             bodyBytes: signed.bodyBytes,
             authInfoBytes: signed.authInfoBytes,
@@ -108,21 +111,14 @@ export class KeplerWallet implements AbstractWallet {
         })
         const signMode = SignMode.SIGN_MODE_LEGACY_AMINO_JSON;
         const msgs = tx.messages.map((msg) => this.aminoTypes.toAmino(msg));
-        const signDoc = makeSignDocAmino(msgs, tx.fee, tx.chainId, tx.memo, tx.signerData.accountNumber, tx.signerData.sequence);
+        const signDoc = makeSignDocAmino(msgs, tx.fee, tx.chainId, tx.memo, tx.signerData.accountNumber, tx.signerData.sequence, tx.timeoutHeight);
         
         // @ts-ignore
         const offlineSigner = window.getOfflineSigner(this.chainId)
         const { signature, signed } = await offlineSigner.signAmino(tx.signerAddress, signDoc);
+        assertAminoSignIdentity(signed, signDoc);
 
-        const signedTxBody = {
-            messages: signed.msgs.map((msg) => this.aminoTypes.fromAmino(msg)),
-            memo: signed.memo,
-        };
-        const signedTxBodyEncodeObject: TxBodyEncodeObject = {
-            typeUrl: "/cosmos.tx.v1beta1.TxBody",
-            value: signedTxBody,
-        };
-        const signedTxBodyBytes = this.registry.encode(signedTxBodyEncodeObject);
+        const signedTxBodyBytes = makeTxBodyBytes(this.registry, signed.msgs.map((msg) => this.aminoTypes.fromAmino(msg)), signed.memo, signed.timeout_height);
 
         const signedGasLimit = Number(signed.fee.gas);
         const signedSequence = BigInt(signed.sequence);

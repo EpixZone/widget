@@ -47,6 +47,7 @@ export interface Transaction {
   messages: readonly EncodeObject[];
   fee: StdFee;
   memo: string;
+  timeoutHeight?: string;
   signerData: Omit<SignerData, "accountNumber" | "sequence"> & {
     accountNumber: string | number;
     sequence: string | number;

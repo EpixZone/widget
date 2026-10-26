@@ -1,7 +1,8 @@
+import { makeAuthInfoBytes, makeSignBytes } from "../signing";
 import { createAminoConverters } from "../amino";
 import { makeSignDoc, makeSignDocAmino } from "../signing";
 import { fromBase64, fromHex } from '@cosmjs/encoding';
-import { makeAuthInfoBytes, makeSignBytes, Registry, TxBodyEncodeObject } from '@cosmjs/proto-signing';
+import { Registry, TxBodyEncodeObject } from '@cosmjs/proto-signing';
 
 import { serializeSignDoc } from '@cosmjs/amino/build/signdoc';
 

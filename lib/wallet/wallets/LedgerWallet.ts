@@ -1,7 +1,8 @@
+import { makeAuthInfoBytes } from "../signing";
 import { createAminoConverters } from "../amino";
 import { makeSignDocAmino } from "../signing";
 import { fromBase64, fromBech32, toHex, toBech32, toBase64 } from "@cosmjs/encoding";
-import { Registry, TxBodyEncodeObject, encodePubkey, makeAuthInfoBytes } from "@cosmjs/proto-signing"
+import { Registry, TxBodyEncodeObject, encodePubkey} from "@cosmjs/proto-signing"
 import { AbstractWallet, Account, DEFAULT_HDPATH, WalletArgument, WalletName, extractChainId } from "../Wallet"
 import { AminoTypes } from "@cosmjs/stargate"
 import TransportWebUSB from "@ledgerhq/hw-transport-webusb"

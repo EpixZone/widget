@@ -1,8 +1,10 @@
 import { createDefaultAminoConverters, AminoConverters } from '@cosmjs/stargate';
+import { authzAminoConverters } from './authzAmino';
 
 export function createAminoConverters(): AminoConverters {
     return {
         ...createDefaultAminoConverters(),
+        ...authzAminoConverters(),
         '/cosmos.staking.v1beta1.MsgCancelUnbondingDelegation': {
             aminoType: 'cosmos-sdk/MsgCancelUnbondingDelegation',
             toAmino: ({ delegatorAddress, validatorAddress, amount, creationHeight }) => ({

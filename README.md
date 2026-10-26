@@ -47,3 +47,17 @@ If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has a
    1. Run `Extensions: Show Built-in Extensions` from VSCode's command palette
    2. Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
 2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+
+## Auto-compound transaction dialogs
+
+`ping-tx-dialog` accepts `type="autocompound"` and a JSON `params` attribute containing `expected_chain_id`, `validator_address`, `operator_address`, `operator_name`, and optional `existing_grant`. Provide the connected `sender`, chain REST `endpoint`, and wallet `hd-path` as usual. The widget checks the endpoint's chain ID, `aepix` staking denomination, active validator, existing delegation, and the account's withdrawal address before signing.
+
+The user supplies a positive EPIX allowance with at most 18 decimal places and a finite expiry. Only a single-validator, cumulative, capped Delegate StakeAuthorization is created. The operator can delegate available balance, including existing funds; this permission cannot enforce rewards-only use. Replacing a grant resets its remaining allowance.
+
+For `type="autocompound_revoke"`, pass `expected_chain_id`, `operator_address`, `operator_name`, and `message_type`. The only accepted types are `/cosmos.staking.v1beta1.MsgDelegate` and the legacy `/cosmos.distribution.v1beta1.MsgWithdrawDelegatorReward`. Revocation remains available after the validator or delegation changes.
+
+Epix/Keplr-compatible and Leap providers support direct signing or the constrained legacy Amino representation. Snap uses its explicit legacy account-number adapter. Standalone Ledger, EIP-712 and Bitcoin wallet paths are not enabled for these dialogs. No broader authorization is substituted when a wallet cannot sign.
+
+Transactions have a validity limit of 120 blocks beyond the freshly checked chain height. The exact signed transaction hash and limit are retained in local storage before broadcasting. A lost response stays unknown across reopen or reload. A committed matching result settles it. If the chain advances strictly beyond the signed limit, the widget refreshes the current grant and requires an explicit new review; it does not claim the old transaction failed. Changing the wallet, sender, endpoint or dialog parameters cancels an in-progress review.
+
+The existing `submited` event reports a broadcast response. `confirmed` is emitted only for a matching committed transaction with code zero. Consumers should refresh grant state after confirmation.

@@ -1,15 +1,16 @@
+import { makeAuthInfoBytes, makeTxBodyBytes } from "./signing";
 import { toBase64, fromBase64, toHex, fromBech32 } from "@cosmjs/encoding";
 import { EncodeObject, encodePubkey, Registry } from '@cosmjs/proto-signing'
 import { encodeSecp256k1Pubkey } from "@cosmjs/amino";
 import { defaultRegistryTypes } from "@cosmjs/stargate";
 import { AuthInfo, TxRaw } from "cosmjs-types/cosmos/tx/v1beta1/tx";
 import { SignMode } from "cosmjs-types/cosmos/tx/signing/v1beta1/signing";
-import { MsgCancelUnbondingDelegation } from "cosmjs-types/cosmos/staking/v1beta1/tx";
+import { additionalRegistryTypes } from './registry';
 import { AbstractWallet, WalletArgument, WalletName, createWallet } from "./Wallet";
 import { post } from "../utils/http";
 import { BroadcastMode, Transaction, TxResponse } from "../utils/type";
 import { wasmTypes } from "@cosmjs/cosmwasm-stargate/build/modules";
-import { makeAuthInfoBytes, makeSignDoc, TxBodyEncodeObject } from "@cosmjs/proto-signing/build";
+import { makeSignDoc } from "@cosmjs/proto-signing";
 import { Any } from "cosmjs-types/google/protobuf/any";
 
 export function isEthermint(chainId: string) {
@@ -20,11 +21,7 @@ export class UniClient {
     registry: Registry
     wallet: AbstractWallet
     constructor(name: WalletName, arg: WalletArgument) {
-        // Add MsgCancelUnbondingDelegation to the registry
-        const cancelUnbondingType = [
-            ["/cosmos.staking.v1beta1.MsgCancelUnbondingDelegation", MsgCancelUnbondingDelegation]
-        ];
-        this.registry = new Registry([...defaultRegistryTypes, ...wasmTypes, ...cancelUnbondingType])
+        this.registry = new Registry([...defaultRegistryTypes, ...wasmTypes, ...additionalRegistryTypes])
         this.wallet = createWallet(name, arg, this.registry)
     }
 
@@ -52,15 +49,7 @@ export class UniClient {
             typeUrl: '/cosmos.crypto.ed25519.PubKey',
             value: new Uint8Array()
         })
-        const txBodyEncodeObject: TxBodyEncodeObject = {
-            typeUrl: "/cosmos.tx.v1beta1.TxBody",
-            value: {
-                messages: transaction.messages,
-                memo: transaction.memo,
-            },
-        };
-
-        const txBodyBytes = this.registry.encode(txBodyEncodeObject);
+        const txBodyBytes = makeTxBodyBytes(this.registry, transaction.messages, transaction.memo, transaction.timeoutHeight);
         const gasLimit = Number(transaction.fee.gas);
         const authInfoBytes = makeAuthInfoBytes(
             [{ pubkey, sequence: BigInt(transaction.signerData.sequence) }],
