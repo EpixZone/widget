@@ -60,4 +60,6 @@ Epix/Keplr-compatible and Leap providers support direct signing or the constrain
 
 Transactions have a validity limit of 120 blocks beyond the freshly checked chain height. The exact signed transaction hash and limit are retained in local storage before broadcasting. A lost response stays unknown across reopen or reload. A committed matching result settles it. If the chain advances strictly beyond the signed limit, the widget refreshes the current grant and requires an explicit new review; it does not claim the old transaction failed. Changing the wallet, sender, endpoint or dialog parameters cancels an in-progress review.
 
+For a dynamic dialog type, set the optional `open-request` property to a new positive safe integer after updating its parameters. Numeric strings are accepted. The widget opens and initializes the selected form after rendering, once per request. Use an increasing counter; `0` or an omitted value does not open a dialog. Existing label and checkbox consumers remain supported.
+
 The existing `submited` event reports a broadcast response. `confirmed` is emitted only for a matching committed transaction with code zero. Consumers should refresh grant state after confirmation.
