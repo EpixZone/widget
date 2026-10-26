@@ -90,5 +90,6 @@
         "vite": "^4.3.2",
         "vite-plugin-css-injected-by-js": "^3.1.0",
         "vue-tsc": "^1.4.2"
-    }
+    },
+    "packageManager": "yarn@1.22.22"
 }
