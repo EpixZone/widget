@@ -50,6 +50,7 @@ const props = defineProps({
     hdPath: String,
     registryName: String,
     params: String,
+    openRequest: [String, Number],
 });
 
 const msgType = computed(() => {
@@ -113,6 +114,25 @@ const expiredPendingKey = ref('');
 const refreshedAuthorization = ref('');
 let authorizationGeneration = 0;
 let confirmationTimer: ReturnType<typeof setTimeout> | undefined;
+let mounted = false;
+let lastOpenRequest = 0;
+
+function requestedOpening() {
+    const value = Number(props.openRequest);
+    return Number.isSafeInteger(value) && value > 0 ? value : 0;
+}
+async function openRequestedDialog() {
+    const request = requestedOpening();
+    if (!mounted || !request || request === lastOpenRequest) return;
+    lastOpenRequest = request;
+    open.value = true;
+    // Custom-element properties can arrive in the same update as a new type.
+    // Let Vue mount the selected message form before initializing its fields.
+    await nextTick();
+    if (!mounted || request !== lastOpenRequest || request !== requestedOpening() || !open.value) return;
+    await initData();
+}
+watch(() => props.openRequest, openRequestedDialog, { flush: 'post' });
 
 function authorizationContext() {
     let wallet: unknown;
@@ -136,11 +156,14 @@ watch(() => [props.type, props.sender, props.endpoint, props.params, props.hdPat
 watch(open, (value) => { if (!value) invalidateAuthorization(); });
 function walletChanged() { if (isAutocompound.value) invalidateAuthorization(); }
 onMounted(() => {
+    mounted = true;
+    void openRequestedDialog();
     window.addEventListener('keplr_keystorechange', walletChanged);
     window.addEventListener('leap_keystorechange', walletChanged);
     window.addEventListener('storage', walletChanged);
 });
 onBeforeUnmount(() => {
+    mounted = false;
     invalidateAuthorization();
     window.removeEventListener('keplr_keystorechange', walletChanged);
     window.removeEventListener('leap_keystorechange', walletChanged);

@@ -416,3 +416,84 @@ test('wallet removal of the transaction timeout is rejected before broadcast', (
     assert.equal(calls.broadcast.length,0);
     assert.match(state.error.value,/timeout height/);
 }));
+
+// Mount the real dialog setup in Vue's renderer. The small child substitutes only
+// message UI and records when initial() runs, so render/prop/lifecycle ordering is real.
+async function mountedDialog(props, run) {
+    const { createRenderer, h } = require('vue');
+    const old = { window: global.window, fetch: global.fetch, localStorage: global.localStorage, boundary: global.__authz };
+    const initial = [];
+    global.window = new EventTarget();
+    global.localStorage = { getItem: () => null };
+    global.fetch = responses();
+    global.__authz = { wallet: { wallet: 'Keplr', cosmosAddress: sender }, http: { getBalance: async () => ({ balances: [] }) } };
+    const node = type => ({ type, children: [], parent: null });
+    const renderer = createRenderer({
+        createElement: node, createText: text => ({ ...node('text'), text }), createComment: node,
+        insert(child, parent, anchor = null) { child.parent = parent; const at = parent.children.indexOf(anchor); parent.children.splice(at < 0 ? parent.children.length : at, 0, child); },
+        remove(child) { const at = child.parent?.children.indexOf(child); if (at >= 0) child.parent.children.splice(at, 1); },
+        setText(n, text) { n.text = text; }, setElementText(n, text) { n.text = text; },
+        parentNode: n => n.parent, nextSibling: n => n.parent?.children[n.parent.children.indexOf(n) + 1] || null,
+        patchProp(n, key, previous, value) { n[key] = value; },
+    });
+    const Child = { props: ['action'], setup(p, { expose }) { expose({ initial() { initial.push(p.action); } }); return () => h('span', p.action || 'unset'); } };
+    const component = await loadDialog();
+    component.render = function() { return h(Child, { key: this.type, action: this.type, ref: 'msgBox' }); };
+    let vm;
+    const app = renderer.createApp({ setup: () => () => h(component, { ...props, ref: value => { vm = value; } }) });
+    const settle = async () => { for (let i = 0; i < 12; i++) { await nextTick(); await Promise.resolve(); } };
+    try {
+        app.mount(node('root'));
+        await settle();
+        await run({ state: vm.$.setupState, initial, settle });
+    } finally {
+        app.unmount();
+        global.window = old.window; global.fetch = old.fetch; global.localStorage = old.localStorage; global.__authz = old.boundary;
+    }
+}
+
+test('mounted dialog handles the first delayed grant request and later revoke exactly once after render', async () => {
+    const props = reactive({ endpoint: 'http://fixture', sender, type: undefined, params: undefined, openRequest: undefined });
+    await mountedDialog(props, async ({ state, initial, settle }) => {
+        assert.equal(state.open, false);
+        assert.deepEqual(initial, []);
+        props.type = 'autocompound'; props.params = JSON.stringify(params); props.openRequest = '1';
+        await settle();
+        assert.equal(state.open, true);
+        assert.equal(state.authorizationReady, true, state.error);
+        assert.deepEqual(initial, ['autocompound']);
+        state.open = false; await settle();
+        props.type = 'autocompound_revoke'; props.params = JSON.stringify({ ...params, message_type: api.DELEGATE }); props.openRequest = 2;
+        await settle();
+        assert.equal(state.open, true);
+        assert.equal(state.authorizationReady, true, state.error);
+        assert.deepEqual(initial, ['autocompound', 'autocompound_revoke']);
+        props.openRequest = '2'; await settle();
+        assert.deepEqual(initial, ['autocompound', 'autocompound_revoke']);
+        state.open = false; props.openRequest = 0; await settle();
+        props.openRequest = 2; await settle();
+        assert.equal(state.open, false, 'an already handled request does not replay after reset');
+        assert.equal(initial.length, 2);
+    });
+});
+
+test('mounted dialog handles a positive pre-upgrade request once and preserves legacy consumers', async () => {
+    const initialProps = reactive({ endpoint: 'http://fixture', sender, type: 'autocompound', params: JSON.stringify(params), openRequest: '7' });
+    await mountedDialog(initialProps, async ({ state, initial, settle }) => {
+        assert.equal(state.open, true);
+        assert.equal(state.authorizationReady, true, state.error);
+        assert.deepEqual(initial, ['autocompound']);
+        initialProps.openRequest = 7; await settle();
+        assert.equal(initial.length, 1);
+    });
+    const legacy = reactive({ endpoint: 'http://fixture', sender, type: 'autocompound', params: JSON.stringify(params) });
+    await mountedDialog(legacy, async ({ state, initial, settle }) => {
+        for (const request of [undefined, '', 0, '0', -1, 'bad', Infinity, 1.5, Number.MAX_SAFE_INTEGER + 1]) {
+            legacy.openRequest = request; await settle();
+            assert.equal(state.open, false); assert.equal(initial.length, 0);
+        }
+        state.open = true; await state.initData();
+        assert.equal(state.authorizationReady, true, state.error);
+        assert.deepEqual(initial, ['autocompound'], 'legacy checkbox change still initializes normally');
+    });
+});
