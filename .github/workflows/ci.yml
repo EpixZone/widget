@@ -1,0 +1,27 @@
+name: Widget checks
+
+on:
+  pull_request:
+  push:
+    branches: [dev]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      NODE_OPTIONS: --max-old-space-size=3072
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: 22.22.1
+      - run: corepack enable
+      - run: corepack prepare yarn@1.22.22 --activate
+      - run: taskset -c 0,1 corepack yarn install --frozen-lockfile --non-interactive
+      - run: taskset -c 0,1 corepack yarn test
+      - name: Build with bounded memory and CPU
+        run: taskset -c 0,1 node --max-old-space-size=3072 node_modules/vite/bin/vite.js build

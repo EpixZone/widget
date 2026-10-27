@@ -1,4 +1,6 @@
-import { makeSignDoc } from "../signing";
+import { makeAuthInfoBytes, makeTxBodyBytes } from "../signing";
+import { makeSignDoc, assertDirectSignIdentity, uint64 } from "../signing";
+import Long from 'long';
 import {
     AbstractWallet,
     Account,
@@ -13,8 +15,7 @@ import {
 } from '@cosmjs/encoding';
 import {
     Registry,
-    TxBodyEncodeObject,
-    makeAuthInfoBytes,
+
 } from '@cosmjs/proto-signing';
 import { Transaction } from '../../utils/type';
 import { TxRaw } from 'cosmjs-types/cosmos/tx/v1beta1/tx';
@@ -29,7 +30,7 @@ export class MetamaskSnapWallet implements AbstractWallet {
     name: WalletName.MetamaskSnap;
     chainId: string;
     registry: Registry;
-    prefix: string;    
+    prefix: string;
     // aminoTypes = new AminoTypes( {...createDefaultAminoConverters(), ...createWasmAminoConverters()});
 
     constructor(arg: WalletArgument, registry: Registry) {
@@ -69,14 +70,7 @@ export class MetamaskSnapWallet implements AbstractWallet {
                 key: new Uint8Array(Object.values(accountFromSigner.pubkey)),
             }).finish(),
         });
-        const txBodyEncodeObject: TxBodyEncodeObject = {
-            typeUrl: '/cosmos.tx.v1beta1.TxBody',
-            value: {
-                messages: transaction.messages,
-                memo: transaction.memo,
-            },
-        };
-        const txBodyBytes = this.registry.encode(txBodyEncodeObject);
+        const txBodyBytes = makeTxBodyBytes(this.registry, transaction.messages, transaction.memo, transaction.timeoutHeight);
         const gasLimit = Number(transaction.fee.gas);
 
         const authInfoBytes = makeAuthInfoBytes(
@@ -94,7 +88,10 @@ export class MetamaskSnapWallet implements AbstractWallet {
         );
 
         const offlineSigner = new CosmjsOfflineSigner(this.chainId);
-        const { signature, signed } = await offlineSigner.signDirect(transaction.signerAddress, signDoc);
+        // This provider still serializes the legacy Long-shaped account number.
+        const providerDoc = { ...signDoc, accountNumber: Long.fromString(uint64(signDoc.accountNumber), true) };
+        const { signature, signed } = await offlineSigner.signDirect(transaction.signerAddress, providerDoc);
+        assertDirectSignIdentity(signed, signDoc);
 
         return TxRaw.fromPartial({
             bodyBytes: signed.bodyBytes,

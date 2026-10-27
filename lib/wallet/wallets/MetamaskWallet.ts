@@ -1,10 +1,10 @@
+import { makeAuthInfoBytes } from "../signing";
 import { createAminoConverters } from "../amino";
 import { AbstractWallet, Account, WalletArgument, WalletName, extractChainId, keyType } from '../Wallet';
 import { fromBase64, fromBech32, toHex, fromHex, toBase64 } from '@cosmjs/encoding';
 import {
     Registry,
     encodePubkey,
-    makeAuthInfoBytes,
 } from '@cosmjs/proto-signing';
 import { Transaction } from '../../utils/type';
 import { TxRaw } from 'cosmjs-types/cosmos/tx/v1beta1/tx';
