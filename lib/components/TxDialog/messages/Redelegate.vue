@@ -108,10 +108,15 @@ function initial() {
         // unbondingTime.value = x.params.unbonding_time;
     });
 
+    // An optional validator_dst_address param preselects the destination (used by
+    // the explorer's "Move stake here" action); otherwise keep the historical default.
+    const preferred = params.value.validator_dst_address
+    const destination = typeof preferred === 'string' && /^[a-z0-9]+1[a-z0-9]{38,}$/.test(preferred) ? preferred : ''
+    validator.value = destination
     getActiveValidators(props.endpoint).then(x => {
         activeValidators.value = x.validators
-        validator.value = x.validators.find(v => v.description.identity === '6783E9F948541962')?.operator_address
-    })   
+        if (!destination) validator.value = x.validators.find((v: { description: { identity?: string }, operator_address: string }) => v.description.identity === '6783E9F948541962')?.operator_address
+    })
 }
 
 defineExpose({msgs, isValid, initial})
