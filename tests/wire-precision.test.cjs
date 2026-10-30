@@ -222,13 +222,66 @@ test('Amino provider must preserve the signed finite transaction height',()=>{
  }
 });
 
-test('a provider returning a signed Long for an unsigned high account is rejected',()=>{
+test('returned Long account numbers compare their exact uint64 bits',()=>{
  const Long=require('long');
  const auth=signing.makeAuthInfoBytes([{pubkey:{typeUrl:'key',value:Uint8Array.of(1)},sequence:'1'}],[],1);
- const doc=signing.makeSignDoc(Uint8Array.of(1),auth,details.expected_chain_id,'14353137888589996058');
- const unsigned={...doc,accountNumber:Long.fromString('14353137888589996058',true)};
- signing.assertDirectSignIdentity(unsigned,doc);
- const signed={...doc,accountNumber:Long.fromString('14353137888589996058')};
- assert.ok(signed.accountNumber.isNegative());
- assert.throws(()=>signing.assertDirectSignIdentity(signed,doc),/Invalid account number/);
+ for(const value of boundaries){
+  const doc=signing.makeSignDoc(Uint8Array.of(1),auth,details.expected_chain_id,value);
+  for(const unsigned of [false,true]){
+   const returned=Long.fromString(value.toString(),unsigned);
+   signing.assertDirectSignIdentity({...doc,accountNumber:returned},doc);
+   assert.equal(returned.unsigned,unsigned,'the provider response was not mutated');
+   const independent=encode('SignDoc',{bodyBytes:doc.bodyBytes,authInfoBytes:doc.authInfoBytes,chainId:doc.chainId,...(value===0n?{}:{accountNumber:returned})});
+   assert.deepEqual(Buffer.from(independent),Buffer.from(signing.makeSignBytes(doc)));
+  }
+ }
+ const doc=signing.makeSignDoc(Uint8Array.of(1),auth,details.expected_chain_id,'18446744073709551615');
+ for(const value of [-1,'-1',-1n,Number(18446744073709551615n),Long.fromString('18446744073709551614')]){
+  assert.throws(()=>signing.assertDirectSignIdentity({...doc,accountNumber:value},doc));
+ }
+ for(const change of [{low:1.5},{high:NaN},{low:4294967295},{high:2147483648},{low:'-1'},{high:undefined},{unsigned:'false'}]){
+  const malformed=Object.assign(Long.fromString('18446744073709551615'),change);
+  assert.throws(()=>signing.assertDirectSignIdentity({...doc,accountNumber:malformed},doc));
+ }
+ assert.throws(()=>signing.uint64(Long.fromString('18446744073709551615')),/Invalid/,'request values remain strict');
+});
+
+test('Keplr and Leap accept signed Long responses without changing signed transaction bytes',async()=>{
+ const Long=require('long');
+ const {keccak256}=require('@cosmjs/crypto');
+ const ec=new (require('elliptic').ec)('secp256k1');
+ const fixtureKey=ec.keyFromPrivate('1'); // disposable public test key, no network
+ const publicKey=ec.keyFromPublic(fixtureKey.getPublic());
+ const old=global.window;
+ try{
+  const {KeplerWallet}=await loadWallet('lib/wallet/wallets/KeplerWallet.ts');
+  const {LeapWallet}=await loadWallet('lib/wallet/wallets/LeapWallet.ts');
+  for(const Wallet of [KeplerWallet,LeapWallet]){
+   for(const value of [15n,9007199254740993n,1n<<63n,14353137888589996058n,(1n<<64n)-1n]){
+    let returned,signatureBytes,calls=0;
+    const signer={getAccounts:async()=>[account],signDirect:async(_,doc)=>{
+     calls++;
+     assert.equal(doc.accountNumber,value);
+     returned={...doc,accountNumber:Long.fromString(value.toString()),
+      bodyBytes:signing.makeTxBodyBytes(registry,[message()],'wallet reviewed memo','4294967295'),
+      authInfoBytes:signing.makeAuthInfoBytes([{pubkey:{typeUrl:'/ethermint.crypto.v1.ethsecp256k1.PubKey',value:Uint8Array.of(10,0)},sequence:value}],[{denom:'aepix',amount:'2'}],450000)};
+     const wire=encode('SignDoc',returned);
+     const canonical=signing.makeSignBytes({...returned,accountNumber:value});
+     assert.deepEqual(Buffer.from(wire),Buffer.from(canonical));
+     const signature=fixtureKey.sign(keccak256(wire),{canonical:true});
+     signatureBytes=Buffer.concat([signature.r.toArrayLike(Buffer,'be',32),signature.s.toArrayLike(Buffer,'be',32)]);
+     return {signed:returned,signature:{signature:signatureBytes.toString('base64')}};
+    }};
+    global.window={getOfflineSigner:()=>signer,keplr:{enable:async()=>{}},leap:{enable:async()=>{},getOfflineSigner:()=>signer}};
+    const raw=await new Wallet({chainId:details.expected_chain_id},registry).sign(tx(value));
+    assert.equal(calls,1);
+    assert.deepEqual(raw.bodyBytes,returned.bodyBytes);
+    assert.deepEqual(raw.authInfoBytes,returned.authInfoBytes);
+    assert.deepEqual(Buffer.from(raw.signatures[0]),signatureBytes);
+    const expectedWire=encode('SignDoc',{bodyBytes:raw.bodyBytes,authInfoBytes:raw.authInfoBytes,chainId:details.expected_chain_id,accountNumber:value.toString()});
+    assert.equal(publicKey.verify(keccak256(expectedWire),{r:signatureBytes.subarray(0,32),s:signatureBytes.subarray(32)}),true);
+    api.assertReviewedMessages(raw,[registry.encodeAsAny(message())]);
+   }
+  }
+ }finally{global.window=old;}
 });

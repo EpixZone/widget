@@ -4,6 +4,7 @@ import type { EncodeObject, Registry } from '@cosmjs/proto-signing';
 import { SignMode } from 'cosmjs-types/cosmos/tx/signing/v1beta1/signing';
 import type { Any } from 'cosmjs-types/google/protobuf/any';
 import type { Coin } from 'cosmjs-types/cosmos/base/v1beta1/coin';
+import Long from 'long';
 import { ExactBinaryWriter } from './binary';
 
 // Account numbers are uint64, including values above Number.MAX_SAFE_INTEGER.
@@ -35,12 +36,25 @@ export function makeTxBodyBytes(registry: Registry, messages: readonly EncodeObj
     }), new ExactBinaryWriter()).finish();
 }
 
+function returnedAccountNumber(value: unknown): string {
+    if (!Long.isLong(value)) return uint64(value);
+    // Some providers return a signed Long for this protobuf uint64 field.
+    // Compare its exact bits with the requested account; never reinterpret
+    // negative decimal strings or change the document that was signed.
+    if (!Number.isInteger(value.low) || value.low < -2147483648 || value.low > 2147483647 ||
+        !Number.isInteger(value.high) || value.high < -2147483648 || value.high > 2147483647 ||
+        typeof value.unsigned !== 'boolean') {
+        throw new Error('Invalid returned account number');
+    }
+    return Long.fromBits(value.low, value.high, true).toString();
+}
+
 export function assertDirectSignIdentity(signed: {
     accountNumber: unknown; chainId: string; authInfoBytes: Uint8Array;
 }, requested: SignDoc): void {
     const before = AuthInfo.decode(requested.authInfoBytes).signerInfos;
     const after = AuthInfo.decode(signed.authInfoBytes).signerInfos;
-    if (signed.chainId !== requested.chainId || uint64(signed.accountNumber) !== uint64(requested.accountNumber) ||
+    if (signed.chainId !== requested.chainId || returnedAccountNumber(signed.accountNumber) !== uint64(requested.accountNumber) ||
         before.length !== 1 || after.length !== 1 || after[0].sequence !== before[0].sequence) {
         throw new Error('Wallet changed the signing chain, account number or sequence');
     }

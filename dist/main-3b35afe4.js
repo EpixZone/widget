@@ -29125,7 +29125,7 @@ function keccak256$8(e) {
 }
 keccak$7.keccak256 = keccak256$8;
 var libsodium$8 = {}, libsodiumWrappers$1 = {};
-const __dirname$1 = "/home/mud/github/widget/node_modules/libsodium/dist/modules";
+const __dirname$1 = "/home/mud/Documents/Codex/2026-10-21/ple/work/widget-issue-669/node_modules/libsodium/dist/modules";
 var libsodium$7 = { exports: {} }, pathBrowserify, hasRequiredPathBrowserify;
 function requirePathBrowserify() {
   if (hasRequiredPathBrowserify)
@@ -37666,6 +37666,714 @@ coin$9.DecProto = {
     }
   };
 })(tx$B);
+/**
+ * @license
+ * Copyright 2009 The Closure Library Authors
+ * Copyright 2020 Daniel Wirtz / The long.js Authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+var wasm$3 = null;
+try {
+  wasm$3 = new WebAssembly.Instance(new WebAssembly.Module(new Uint8Array([
+    0,
+    97,
+    115,
+    109,
+    1,
+    0,
+    0,
+    0,
+    1,
+    13,
+    2,
+    96,
+    0,
+    1,
+    127,
+    96,
+    4,
+    127,
+    127,
+    127,
+    127,
+    1,
+    127,
+    3,
+    7,
+    6,
+    0,
+    1,
+    1,
+    1,
+    1,
+    1,
+    6,
+    6,
+    1,
+    127,
+    1,
+    65,
+    0,
+    11,
+    7,
+    50,
+    6,
+    3,
+    109,
+    117,
+    108,
+    0,
+    1,
+    5,
+    100,
+    105,
+    118,
+    95,
+    115,
+    0,
+    2,
+    5,
+    100,
+    105,
+    118,
+    95,
+    117,
+    0,
+    3,
+    5,
+    114,
+    101,
+    109,
+    95,
+    115,
+    0,
+    4,
+    5,
+    114,
+    101,
+    109,
+    95,
+    117,
+    0,
+    5,
+    8,
+    103,
+    101,
+    116,
+    95,
+    104,
+    105,
+    103,
+    104,
+    0,
+    0,
+    10,
+    191,
+    1,
+    6,
+    4,
+    0,
+    35,
+    0,
+    11,
+    36,
+    1,
+    1,
+    126,
+    32,
+    0,
+    173,
+    32,
+    1,
+    173,
+    66,
+    32,
+    134,
+    132,
+    32,
+    2,
+    173,
+    32,
+    3,
+    173,
+    66,
+    32,
+    134,
+    132,
+    126,
+    34,
+    4,
+    66,
+    32,
+    135,
+    167,
+    36,
+    0,
+    32,
+    4,
+    167,
+    11,
+    36,
+    1,
+    1,
+    126,
+    32,
+    0,
+    173,
+    32,
+    1,
+    173,
+    66,
+    32,
+    134,
+    132,
+    32,
+    2,
+    173,
+    32,
+    3,
+    173,
+    66,
+    32,
+    134,
+    132,
+    127,
+    34,
+    4,
+    66,
+    32,
+    135,
+    167,
+    36,
+    0,
+    32,
+    4,
+    167,
+    11,
+    36,
+    1,
+    1,
+    126,
+    32,
+    0,
+    173,
+    32,
+    1,
+    173,
+    66,
+    32,
+    134,
+    132,
+    32,
+    2,
+    173,
+    32,
+    3,
+    173,
+    66,
+    32,
+    134,
+    132,
+    128,
+    34,
+    4,
+    66,
+    32,
+    135,
+    167,
+    36,
+    0,
+    32,
+    4,
+    167,
+    11,
+    36,
+    1,
+    1,
+    126,
+    32,
+    0,
+    173,
+    32,
+    1,
+    173,
+    66,
+    32,
+    134,
+    132,
+    32,
+    2,
+    173,
+    32,
+    3,
+    173,
+    66,
+    32,
+    134,
+    132,
+    129,
+    34,
+    4,
+    66,
+    32,
+    135,
+    167,
+    36,
+    0,
+    32,
+    4,
+    167,
+    11,
+    36,
+    1,
+    1,
+    126,
+    32,
+    0,
+    173,
+    32,
+    1,
+    173,
+    66,
+    32,
+    134,
+    132,
+    32,
+    2,
+    173,
+    32,
+    3,
+    173,
+    66,
+    32,
+    134,
+    132,
+    130,
+    34,
+    4,
+    66,
+    32,
+    135,
+    167,
+    36,
+    0,
+    32,
+    4,
+    167,
+    11
+  ])), {}).exports;
+} catch {
+}
+function Long$3(e, n, o) {
+  this.low = e | 0, this.high = n | 0, this.unsigned = !!o;
+}
+Long$3.prototype.__isLong__;
+Object.defineProperty(Long$3.prototype, "__isLong__", { value: !0 });
+function isLong$3(e) {
+  return (e && e.__isLong__) === !0;
+}
+function ctz32(e) {
+  var n = Math.clz32(e & -e);
+  return e ? 31 - n : n;
+}
+Long$3.isLong = isLong$3;
+var INT_CACHE$3 = {}, UINT_CACHE$3 = {};
+function fromInt$3(e, n) {
+  var o, d, u;
+  return n ? (e >>>= 0, (u = 0 <= e && e < 256) && (d = UINT_CACHE$3[e], d) ? d : (o = fromBits$3(e, 0, !0), u && (UINT_CACHE$3[e] = o), o)) : (e |= 0, (u = -128 <= e && e < 128) && (d = INT_CACHE$3[e], d) ? d : (o = fromBits$3(e, e < 0 ? -1 : 0, !1), u && (INT_CACHE$3[e] = o), o));
+}
+Long$3.fromInt = fromInt$3;
+function fromNumber$3(e, n) {
+  if (isNaN(e))
+    return n ? UZERO$3 : ZERO$3;
+  if (n) {
+    if (e < 0)
+      return UZERO$3;
+    if (e >= TWO_PWR_64_DBL$3)
+      return MAX_UNSIGNED_VALUE$3;
+  } else {
+    if (e <= -TWO_PWR_63_DBL$3)
+      return MIN_VALUE$3;
+    if (e + 1 >= TWO_PWR_63_DBL$3)
+      return MAX_VALUE$3;
+  }
+  return e < 0 ? fromNumber$3(-e, n).neg() : fromBits$3(e % TWO_PWR_32_DBL$3 | 0, e / TWO_PWR_32_DBL$3 | 0, n);
+}
+Long$3.fromNumber = fromNumber$3;
+function fromBits$3(e, n, o) {
+  return new Long$3(e, n, o);
+}
+Long$3.fromBits = fromBits$3;
+var pow_dbl$3 = Math.pow;
+function fromString$3(e, n, o) {
+  if (e.length === 0)
+    throw Error("empty string");
+  if (typeof n == "number" ? (o = n, n = !1) : n = !!n, e === "NaN" || e === "Infinity" || e === "+Infinity" || e === "-Infinity")
+    return n ? UZERO$3 : ZERO$3;
+  if (o = o || 10, o < 2 || 36 < o)
+    throw RangeError("radix");
+  var d;
+  if ((d = e.indexOf("-")) > 0)
+    throw Error("interior hyphen");
+  if (d === 0)
+    return fromString$3(e.substring(1), n, o).neg();
+  for (var u = fromNumber$3(pow_dbl$3(o, 8)), c = ZERO$3, m = 0; m < e.length; m += 8) {
+    var P = Math.min(8, e.length - m), Q = parseInt(e.substring(m, m + P), o);
+    if (P < 8) {
+      var F = fromNumber$3(pow_dbl$3(o, P));
+      c = c.mul(F).add(fromNumber$3(Q));
+    } else
+      c = c.mul(u), c = c.add(fromNumber$3(Q));
+  }
+  return c.unsigned = n, c;
+}
+Long$3.fromString = fromString$3;
+function fromValue$3(e, n) {
+  return typeof e == "number" ? fromNumber$3(e, n) : typeof e == "string" ? fromString$3(e, n) : fromBits$3(e.low, e.high, typeof n == "boolean" ? n : e.unsigned);
+}
+Long$3.fromValue = fromValue$3;
+var TWO_PWR_16_DBL$3 = 65536, TWO_PWR_24_DBL$3 = 1 << 24, TWO_PWR_32_DBL$3 = TWO_PWR_16_DBL$3 * TWO_PWR_16_DBL$3, TWO_PWR_64_DBL$3 = TWO_PWR_32_DBL$3 * TWO_PWR_32_DBL$3, TWO_PWR_63_DBL$3 = TWO_PWR_64_DBL$3 / 2, TWO_PWR_24$3 = fromInt$3(TWO_PWR_24_DBL$3), ZERO$3 = fromInt$3(0);
+Long$3.ZERO = ZERO$3;
+var UZERO$3 = fromInt$3(0, !0);
+Long$3.UZERO = UZERO$3;
+var ONE$3 = fromInt$3(1);
+Long$3.ONE = ONE$3;
+var UONE$3 = fromInt$3(1, !0);
+Long$3.UONE = UONE$3;
+var NEG_ONE$3 = fromInt$3(-1);
+Long$3.NEG_ONE = NEG_ONE$3;
+var MAX_VALUE$3 = fromBits$3(-1, 2147483647, !1);
+Long$3.MAX_VALUE = MAX_VALUE$3;
+var MAX_UNSIGNED_VALUE$3 = fromBits$3(-1, -1, !0);
+Long$3.MAX_UNSIGNED_VALUE = MAX_UNSIGNED_VALUE$3;
+var MIN_VALUE$3 = fromBits$3(0, -2147483648, !1);
+Long$3.MIN_VALUE = MIN_VALUE$3;
+var LongPrototype$3 = Long$3.prototype;
+LongPrototype$3.toInt = function() {
+  return this.unsigned ? this.low >>> 0 : this.low;
+};
+LongPrototype$3.toNumber = function() {
+  return this.unsigned ? (this.high >>> 0) * TWO_PWR_32_DBL$3 + (this.low >>> 0) : this.high * TWO_PWR_32_DBL$3 + (this.low >>> 0);
+};
+LongPrototype$3.toString = function(n) {
+  if (n = n || 10, n < 2 || 36 < n)
+    throw RangeError("radix");
+  if (this.isZero())
+    return "0";
+  if (this.isNegative())
+    if (this.eq(MIN_VALUE$3)) {
+      var o = fromNumber$3(n), d = this.div(o), u = d.mul(o).sub(this);
+      return d.toString(n) + u.toInt().toString(n);
+    } else
+      return "-" + this.neg().toString(n);
+  for (var c = fromNumber$3(pow_dbl$3(n, 6), this.unsigned), m = this, P = ""; ; ) {
+    var Q = m.div(c), F = m.sub(Q.mul(c)).toInt() >>> 0, J = F.toString(n);
+    if (m = Q, m.isZero())
+      return J + P;
+    for (; J.length < 6; )
+      J = "0" + J;
+    P = "" + J + P;
+  }
+};
+LongPrototype$3.getHighBits = function() {
+  return this.high;
+};
+LongPrototype$3.getHighBitsUnsigned = function() {
+  return this.high >>> 0;
+};
+LongPrototype$3.getLowBits = function() {
+  return this.low;
+};
+LongPrototype$3.getLowBitsUnsigned = function() {
+  return this.low >>> 0;
+};
+LongPrototype$3.getNumBitsAbs = function() {
+  if (this.isNegative())
+    return this.eq(MIN_VALUE$3) ? 64 : this.neg().getNumBitsAbs();
+  for (var n = this.high != 0 ? this.high : this.low, o = 31; o > 0 && !(n & 1 << o); o--)
+    ;
+  return this.high != 0 ? o + 33 : o + 1;
+};
+LongPrototype$3.isZero = function() {
+  return this.high === 0 && this.low === 0;
+};
+LongPrototype$3.eqz = LongPrototype$3.isZero;
+LongPrototype$3.isNegative = function() {
+  return !this.unsigned && this.high < 0;
+};
+LongPrototype$3.isPositive = function() {
+  return this.unsigned || this.high >= 0;
+};
+LongPrototype$3.isOdd = function() {
+  return (this.low & 1) === 1;
+};
+LongPrototype$3.isEven = function() {
+  return (this.low & 1) === 0;
+};
+LongPrototype$3.equals = function(n) {
+  return isLong$3(n) || (n = fromValue$3(n)), this.unsigned !== n.unsigned && this.high >>> 31 === 1 && n.high >>> 31 === 1 ? !1 : this.high === n.high && this.low === n.low;
+};
+LongPrototype$3.eq = LongPrototype$3.equals;
+LongPrototype$3.notEquals = function(n) {
+  return !this.eq(
+    /* validates */
+    n
+  );
+};
+LongPrototype$3.neq = LongPrototype$3.notEquals;
+LongPrototype$3.ne = LongPrototype$3.notEquals;
+LongPrototype$3.lessThan = function(n) {
+  return this.comp(
+    /* validates */
+    n
+  ) < 0;
+};
+LongPrototype$3.lt = LongPrototype$3.lessThan;
+LongPrototype$3.lessThanOrEqual = function(n) {
+  return this.comp(
+    /* validates */
+    n
+  ) <= 0;
+};
+LongPrototype$3.lte = LongPrototype$3.lessThanOrEqual;
+LongPrototype$3.le = LongPrototype$3.lessThanOrEqual;
+LongPrototype$3.greaterThan = function(n) {
+  return this.comp(
+    /* validates */
+    n
+  ) > 0;
+};
+LongPrototype$3.gt = LongPrototype$3.greaterThan;
+LongPrototype$3.greaterThanOrEqual = function(n) {
+  return this.comp(
+    /* validates */
+    n
+  ) >= 0;
+};
+LongPrototype$3.gte = LongPrototype$3.greaterThanOrEqual;
+LongPrototype$3.ge = LongPrototype$3.greaterThanOrEqual;
+LongPrototype$3.compare = function(n) {
+  if (isLong$3(n) || (n = fromValue$3(n)), this.eq(n))
+    return 0;
+  var o = this.isNegative(), d = n.isNegative();
+  return o && !d ? -1 : !o && d ? 1 : this.unsigned ? n.high >>> 0 > this.high >>> 0 || n.high === this.high && n.low >>> 0 > this.low >>> 0 ? -1 : 1 : this.sub(n).isNegative() ? -1 : 1;
+};
+LongPrototype$3.comp = LongPrototype$3.compare;
+LongPrototype$3.negate = function() {
+  return !this.unsigned && this.eq(MIN_VALUE$3) ? MIN_VALUE$3 : this.not().add(ONE$3);
+};
+LongPrototype$3.neg = LongPrototype$3.negate;
+LongPrototype$3.add = function(n) {
+  isLong$3(n) || (n = fromValue$3(n));
+  var o = this.high >>> 16, d = this.high & 65535, u = this.low >>> 16, c = this.low & 65535, m = n.high >>> 16, P = n.high & 65535, Q = n.low >>> 16, F = n.low & 65535, J = 0, j = 0, U = 0, A = 0;
+  return A += c + F, U += A >>> 16, A &= 65535, U += u + Q, j += U >>> 16, U &= 65535, j += d + P, J += j >>> 16, j &= 65535, J += o + m, J &= 65535, fromBits$3(U << 16 | A, J << 16 | j, this.unsigned);
+};
+LongPrototype$3.subtract = function(n) {
+  return isLong$3(n) || (n = fromValue$3(n)), this.add(n.neg());
+};
+LongPrototype$3.sub = LongPrototype$3.subtract;
+LongPrototype$3.multiply = function(n) {
+  if (this.isZero())
+    return this;
+  if (isLong$3(n) || (n = fromValue$3(n)), wasm$3) {
+    var o = wasm$3.mul(
+      this.low,
+      this.high,
+      n.low,
+      n.high
+    );
+    return fromBits$3(o, wasm$3.get_high(), this.unsigned);
+  }
+  if (n.isZero())
+    return this.unsigned ? UZERO$3 : ZERO$3;
+  if (this.eq(MIN_VALUE$3))
+    return n.isOdd() ? MIN_VALUE$3 : ZERO$3;
+  if (n.eq(MIN_VALUE$3))
+    return this.isOdd() ? MIN_VALUE$3 : ZERO$3;
+  if (this.isNegative())
+    return n.isNegative() ? this.neg().mul(n.neg()) : this.neg().mul(n).neg();
+  if (n.isNegative())
+    return this.mul(n.neg()).neg();
+  if (this.lt(TWO_PWR_24$3) && n.lt(TWO_PWR_24$3))
+    return fromNumber$3(this.toNumber() * n.toNumber(), this.unsigned);
+  var d = this.high >>> 16, u = this.high & 65535, c = this.low >>> 16, m = this.low & 65535, P = n.high >>> 16, Q = n.high & 65535, F = n.low >>> 16, J = n.low & 65535, j = 0, U = 0, A = 0, L = 0;
+  return L += m * J, A += L >>> 16, L &= 65535, A += c * J, U += A >>> 16, A &= 65535, A += m * F, U += A >>> 16, A &= 65535, U += u * J, j += U >>> 16, U &= 65535, U += c * F, j += U >>> 16, U &= 65535, U += m * Q, j += U >>> 16, U &= 65535, j += d * J + u * F + c * Q + m * P, j &= 65535, fromBits$3(A << 16 | L, j << 16 | U, this.unsigned);
+};
+LongPrototype$3.mul = LongPrototype$3.multiply;
+LongPrototype$3.divide = function(n) {
+  if (isLong$3(n) || (n = fromValue$3(n)), n.isZero())
+    throw Error("division by zero");
+  if (wasm$3) {
+    if (!this.unsigned && this.high === -2147483648 && n.low === -1 && n.high === -1)
+      return this;
+    var o = (this.unsigned ? wasm$3.div_u : wasm$3.div_s)(
+      this.low,
+      this.high,
+      n.low,
+      n.high
+    );
+    return fromBits$3(o, wasm$3.get_high(), this.unsigned);
+  }
+  if (this.isZero())
+    return this.unsigned ? UZERO$3 : ZERO$3;
+  var d, u, c;
+  if (this.unsigned) {
+    if (n.unsigned || (n = n.toUnsigned()), n.gt(this))
+      return UZERO$3;
+    if (n.gt(this.shru(1)))
+      return UONE$3;
+    c = UZERO$3;
+  } else {
+    if (this.eq(MIN_VALUE$3)) {
+      if (n.eq(ONE$3) || n.eq(NEG_ONE$3))
+        return MIN_VALUE$3;
+      if (n.eq(MIN_VALUE$3))
+        return ONE$3;
+      var m = this.shr(1);
+      return d = m.div(n).shl(1), d.eq(ZERO$3) ? n.isNegative() ? ONE$3 : NEG_ONE$3 : (u = this.sub(n.mul(d)), c = d.add(u.div(n)), c);
+    } else if (n.eq(MIN_VALUE$3))
+      return this.unsigned ? UZERO$3 : ZERO$3;
+    if (this.isNegative())
+      return n.isNegative() ? this.neg().div(n.neg()) : this.neg().div(n).neg();
+    if (n.isNegative())
+      return this.div(n.neg()).neg();
+    c = ZERO$3;
+  }
+  for (u = this; u.gte(n); ) {
+    d = Math.max(1, Math.floor(u.toNumber() / n.toNumber()));
+    for (var P = Math.ceil(Math.log(d) / Math.LN2), Q = P <= 48 ? 1 : pow_dbl$3(2, P - 48), F = fromNumber$3(d), J = F.mul(n); J.isNegative() || J.gt(u); )
+      d -= Q, F = fromNumber$3(d, this.unsigned), J = F.mul(n);
+    F.isZero() && (F = ONE$3), c = c.add(F), u = u.sub(J);
+  }
+  return c;
+};
+LongPrototype$3.div = LongPrototype$3.divide;
+LongPrototype$3.modulo = function(n) {
+  if (isLong$3(n) || (n = fromValue$3(n)), wasm$3) {
+    var o = (this.unsigned ? wasm$3.rem_u : wasm$3.rem_s)(
+      this.low,
+      this.high,
+      n.low,
+      n.high
+    );
+    return fromBits$3(o, wasm$3.get_high(), this.unsigned);
+  }
+  return this.sub(this.div(n).mul(n));
+};
+LongPrototype$3.mod = LongPrototype$3.modulo;
+LongPrototype$3.rem = LongPrototype$3.modulo;
+LongPrototype$3.not = function() {
+  return fromBits$3(~this.low, ~this.high, this.unsigned);
+};
+LongPrototype$3.countLeadingZeros = function() {
+  return this.high ? Math.clz32(this.high) : Math.clz32(this.low) + 32;
+};
+LongPrototype$3.clz = LongPrototype$3.countLeadingZeros;
+LongPrototype$3.countTrailingZeros = function() {
+  return this.low ? ctz32(this.low) : ctz32(this.high) + 32;
+};
+LongPrototype$3.ctz = LongPrototype$3.countTrailingZeros;
+LongPrototype$3.and = function(n) {
+  return isLong$3(n) || (n = fromValue$3(n)), fromBits$3(this.low & n.low, this.high & n.high, this.unsigned);
+};
+LongPrototype$3.or = function(n) {
+  return isLong$3(n) || (n = fromValue$3(n)), fromBits$3(this.low | n.low, this.high | n.high, this.unsigned);
+};
+LongPrototype$3.xor = function(n) {
+  return isLong$3(n) || (n = fromValue$3(n)), fromBits$3(this.low ^ n.low, this.high ^ n.high, this.unsigned);
+};
+LongPrototype$3.shiftLeft = function(n) {
+  return isLong$3(n) && (n = n.toInt()), (n &= 63) === 0 ? this : n < 32 ? fromBits$3(this.low << n, this.high << n | this.low >>> 32 - n, this.unsigned) : fromBits$3(0, this.low << n - 32, this.unsigned);
+};
+LongPrototype$3.shl = LongPrototype$3.shiftLeft;
+LongPrototype$3.shiftRight = function(n) {
+  return isLong$3(n) && (n = n.toInt()), (n &= 63) === 0 ? this : n < 32 ? fromBits$3(this.low >>> n | this.high << 32 - n, this.high >> n, this.unsigned) : fromBits$3(this.high >> n - 32, this.high >= 0 ? 0 : -1, this.unsigned);
+};
+LongPrototype$3.shr = LongPrototype$3.shiftRight;
+LongPrototype$3.shiftRightUnsigned = function(n) {
+  return isLong$3(n) && (n = n.toInt()), (n &= 63) === 0 ? this : n < 32 ? fromBits$3(this.low >>> n | this.high << 32 - n, this.high >>> n, this.unsigned) : n === 32 ? fromBits$3(this.high, 0, this.unsigned) : fromBits$3(this.high >>> n - 32, 0, this.unsigned);
+};
+LongPrototype$3.shru = LongPrototype$3.shiftRightUnsigned;
+LongPrototype$3.shr_u = LongPrototype$3.shiftRightUnsigned;
+LongPrototype$3.rotateLeft = function(n) {
+  var o;
+  return isLong$3(n) && (n = n.toInt()), (n &= 63) === 0 ? this : n === 32 ? fromBits$3(this.high, this.low, this.unsigned) : n < 32 ? (o = 32 - n, fromBits$3(this.low << n | this.high >>> o, this.high << n | this.low >>> o, this.unsigned)) : (n -= 32, o = 32 - n, fromBits$3(this.high << n | this.low >>> o, this.low << n | this.high >>> o, this.unsigned));
+};
+LongPrototype$3.rotl = LongPrototype$3.rotateLeft;
+LongPrototype$3.rotateRight = function(n) {
+  var o;
+  return isLong$3(n) && (n = n.toInt()), (n &= 63) === 0 ? this : n === 32 ? fromBits$3(this.high, this.low, this.unsigned) : n < 32 ? (o = 32 - n, fromBits$3(this.high << o | this.low >>> n, this.low << o | this.high >>> n, this.unsigned)) : (n -= 32, o = 32 - n, fromBits$3(this.low << o | this.high >>> n, this.high << o | this.low >>> n, this.unsigned));
+};
+LongPrototype$3.rotr = LongPrototype$3.rotateRight;
+LongPrototype$3.toSigned = function() {
+  return this.unsigned ? fromBits$3(this.low, this.high, !1) : this;
+};
+LongPrototype$3.toUnsigned = function() {
+  return this.unsigned ? this : fromBits$3(this.low, this.high, !0);
+};
+LongPrototype$3.toBytes = function(n) {
+  return n ? this.toBytesLE() : this.toBytesBE();
+};
+LongPrototype$3.toBytesLE = function() {
+  var n = this.high, o = this.low;
+  return [
+    o & 255,
+    o >>> 8 & 255,
+    o >>> 16 & 255,
+    o >>> 24,
+    n & 255,
+    n >>> 8 & 255,
+    n >>> 16 & 255,
+    n >>> 24
+  ];
+};
+LongPrototype$3.toBytesBE = function() {
+  var n = this.high, o = this.low;
+  return [
+    n >>> 24,
+    n >>> 16 & 255,
+    n >>> 8 & 255,
+    n & 255,
+    o >>> 24,
+    o >>> 16 & 255,
+    o >>> 8 & 255,
+    o & 255
+  ];
+};
+Long$3.fromBytes = function(n, o, d) {
+  return d ? Long$3.fromBytesLE(n, o) : Long$3.fromBytesBE(n, o);
+};
+Long$3.fromBytesLE = function(n, o) {
+  return new Long$3(
+    n[0] | n[1] << 8 | n[2] << 16 | n[3] << 24,
+    n[4] | n[5] << 8 | n[6] << 16 | n[7] << 24,
+    o
+  );
+};
+Long$3.fromBytesBE = function(n, o) {
+  return new Long$3(
+    n[4] << 24 | n[5] << 16 | n[6] << 8 | n[7],
+    n[0] << 24 | n[1] << 16 | n[2] << 8 | n[3],
+    o
+  );
+};
+const long$3 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
+  __proto__: null,
+  default: Long$3
+}, Symbol.toStringTag, { value: "Module" }));
 class ExactBinaryWriter extends BinaryWriter_1 {
   constructor() {
     super(...arguments);
@@ -37705,9 +38413,16 @@ function makeTxBodyBytes(e, n, o, d) {
     timeoutHeight: BigInt(uint64(d || "0"))
   }), new ExactBinaryWriter()).finish();
 }
+function returnedAccountNumber(e) {
+  if (!Long$3.isLong(e))
+    return uint64(e);
+  if (!Number.isInteger(e.low) || e.low < -2147483648 || e.low > 2147483647 || !Number.isInteger(e.high) || e.high < -2147483648 || e.high > 2147483647 || typeof e.unsigned != "boolean")
+    throw new Error("Invalid returned account number");
+  return Long$3.fromBits(e.low, e.high, !0).toString();
+}
 function assertDirectSignIdentity(e, n) {
   const o = tx$B.AuthInfo.decode(n.authInfoBytes).signerInfos, d = tx$B.AuthInfo.decode(e.authInfoBytes).signerInfos;
-  if (e.chainId !== n.chainId || uint64(e.accountNumber) !== uint64(n.accountNumber) || o.length !== 1 || d.length !== 1 || d[0].sequence !== o[0].sequence)
+  if (e.chainId !== n.chainId || returnedAccountNumber(e.accountNumber) !== uint64(n.accountNumber) || o.length !== 1 || d.length !== 1 || d[0].sequence !== o[0].sequence)
     throw new Error("Wallet changed the signing chain, account number or sequence");
 }
 function makeAuthInfoBytes$2(e, n, o, d, u, c = signing$4.SignMode.SIGN_MODE_DIRECT) {
@@ -40704,7 +41419,7 @@ function keccak256$7(e) {
 }
 keccak$6.keccak256 = keccak256$7;
 var libsodium$6 = {}, libsodiumWrappers = {};
-const __dirname = "/home/mud/github/widget/node_modules/libsodium-sumo/dist/modules-sumo";
+const __dirname = "/home/mud/Documents/Codex/2026-10-21/ple/work/widget-issue-669/node_modules/libsodium-sumo/dist/modules-sumo";
 var libsodiumSumo = { exports: {} }, hasRequiredLibsodiumSumo;
 function requireLibsodiumSumo() {
   return hasRequiredLibsodiumSumo || (hasRequiredLibsodiumSumo = 1, function(e, n) {
@@ -142821,714 +143536,6 @@ class MetamaskWallet {
     });
   }
 }
-/**
- * @license
- * Copyright 2009 The Closure Library Authors
- * Copyright 2020 Daniel Wirtz / The long.js Authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * SPDX-License-Identifier: Apache-2.0
- */
-var wasm$3 = null;
-try {
-  wasm$3 = new WebAssembly.Instance(new WebAssembly.Module(new Uint8Array([
-    0,
-    97,
-    115,
-    109,
-    1,
-    0,
-    0,
-    0,
-    1,
-    13,
-    2,
-    96,
-    0,
-    1,
-    127,
-    96,
-    4,
-    127,
-    127,
-    127,
-    127,
-    1,
-    127,
-    3,
-    7,
-    6,
-    0,
-    1,
-    1,
-    1,
-    1,
-    1,
-    6,
-    6,
-    1,
-    127,
-    1,
-    65,
-    0,
-    11,
-    7,
-    50,
-    6,
-    3,
-    109,
-    117,
-    108,
-    0,
-    1,
-    5,
-    100,
-    105,
-    118,
-    95,
-    115,
-    0,
-    2,
-    5,
-    100,
-    105,
-    118,
-    95,
-    117,
-    0,
-    3,
-    5,
-    114,
-    101,
-    109,
-    95,
-    115,
-    0,
-    4,
-    5,
-    114,
-    101,
-    109,
-    95,
-    117,
-    0,
-    5,
-    8,
-    103,
-    101,
-    116,
-    95,
-    104,
-    105,
-    103,
-    104,
-    0,
-    0,
-    10,
-    191,
-    1,
-    6,
-    4,
-    0,
-    35,
-    0,
-    11,
-    36,
-    1,
-    1,
-    126,
-    32,
-    0,
-    173,
-    32,
-    1,
-    173,
-    66,
-    32,
-    134,
-    132,
-    32,
-    2,
-    173,
-    32,
-    3,
-    173,
-    66,
-    32,
-    134,
-    132,
-    126,
-    34,
-    4,
-    66,
-    32,
-    135,
-    167,
-    36,
-    0,
-    32,
-    4,
-    167,
-    11,
-    36,
-    1,
-    1,
-    126,
-    32,
-    0,
-    173,
-    32,
-    1,
-    173,
-    66,
-    32,
-    134,
-    132,
-    32,
-    2,
-    173,
-    32,
-    3,
-    173,
-    66,
-    32,
-    134,
-    132,
-    127,
-    34,
-    4,
-    66,
-    32,
-    135,
-    167,
-    36,
-    0,
-    32,
-    4,
-    167,
-    11,
-    36,
-    1,
-    1,
-    126,
-    32,
-    0,
-    173,
-    32,
-    1,
-    173,
-    66,
-    32,
-    134,
-    132,
-    32,
-    2,
-    173,
-    32,
-    3,
-    173,
-    66,
-    32,
-    134,
-    132,
-    128,
-    34,
-    4,
-    66,
-    32,
-    135,
-    167,
-    36,
-    0,
-    32,
-    4,
-    167,
-    11,
-    36,
-    1,
-    1,
-    126,
-    32,
-    0,
-    173,
-    32,
-    1,
-    173,
-    66,
-    32,
-    134,
-    132,
-    32,
-    2,
-    173,
-    32,
-    3,
-    173,
-    66,
-    32,
-    134,
-    132,
-    129,
-    34,
-    4,
-    66,
-    32,
-    135,
-    167,
-    36,
-    0,
-    32,
-    4,
-    167,
-    11,
-    36,
-    1,
-    1,
-    126,
-    32,
-    0,
-    173,
-    32,
-    1,
-    173,
-    66,
-    32,
-    134,
-    132,
-    32,
-    2,
-    173,
-    32,
-    3,
-    173,
-    66,
-    32,
-    134,
-    132,
-    130,
-    34,
-    4,
-    66,
-    32,
-    135,
-    167,
-    36,
-    0,
-    32,
-    4,
-    167,
-    11
-  ])), {}).exports;
-} catch (e) {
-}
-function Long$3(e, n, o) {
-  this.low = e | 0, this.high = n | 0, this.unsigned = !!o;
-}
-Long$3.prototype.__isLong__;
-Object.defineProperty(Long$3.prototype, "__isLong__", { value: !0 });
-function isLong$3(e) {
-  return (e && e.__isLong__) === !0;
-}
-function ctz32(e) {
-  var n = Math.clz32(e & -e);
-  return e ? 31 - n : n;
-}
-Long$3.isLong = isLong$3;
-var INT_CACHE$3 = {}, UINT_CACHE$3 = {};
-function fromInt$3(e, n) {
-  var o, d, u;
-  return n ? (e >>>= 0, (u = 0 <= e && e < 256) && (d = UINT_CACHE$3[e], d) ? d : (o = fromBits$3(e, 0, !0), u && (UINT_CACHE$3[e] = o), o)) : (e |= 0, (u = -128 <= e && e < 128) && (d = INT_CACHE$3[e], d) ? d : (o = fromBits$3(e, e < 0 ? -1 : 0, !1), u && (INT_CACHE$3[e] = o), o));
-}
-Long$3.fromInt = fromInt$3;
-function fromNumber$3(e, n) {
-  if (isNaN(e))
-    return n ? UZERO$3 : ZERO$3;
-  if (n) {
-    if (e < 0)
-      return UZERO$3;
-    if (e >= TWO_PWR_64_DBL$3)
-      return MAX_UNSIGNED_VALUE$3;
-  } else {
-    if (e <= -TWO_PWR_63_DBL$3)
-      return MIN_VALUE$3;
-    if (e + 1 >= TWO_PWR_63_DBL$3)
-      return MAX_VALUE$3;
-  }
-  return e < 0 ? fromNumber$3(-e, n).neg() : fromBits$3(e % TWO_PWR_32_DBL$3 | 0, e / TWO_PWR_32_DBL$3 | 0, n);
-}
-Long$3.fromNumber = fromNumber$3;
-function fromBits$3(e, n, o) {
-  return new Long$3(e, n, o);
-}
-Long$3.fromBits = fromBits$3;
-var pow_dbl$3 = Math.pow;
-function fromString$3(e, n, o) {
-  if (e.length === 0)
-    throw Error("empty string");
-  if (typeof n == "number" ? (o = n, n = !1) : n = !!n, e === "NaN" || e === "Infinity" || e === "+Infinity" || e === "-Infinity")
-    return n ? UZERO$3 : ZERO$3;
-  if (o = o || 10, o < 2 || 36 < o)
-    throw RangeError("radix");
-  var d;
-  if ((d = e.indexOf("-")) > 0)
-    throw Error("interior hyphen");
-  if (d === 0)
-    return fromString$3(e.substring(1), n, o).neg();
-  for (var u = fromNumber$3(pow_dbl$3(o, 8)), c = ZERO$3, m = 0; m < e.length; m += 8) {
-    var P = Math.min(8, e.length - m), Q = parseInt(e.substring(m, m + P), o);
-    if (P < 8) {
-      var F = fromNumber$3(pow_dbl$3(o, P));
-      c = c.mul(F).add(fromNumber$3(Q));
-    } else
-      c = c.mul(u), c = c.add(fromNumber$3(Q));
-  }
-  return c.unsigned = n, c;
-}
-Long$3.fromString = fromString$3;
-function fromValue$3(e, n) {
-  return typeof e == "number" ? fromNumber$3(e, n) : typeof e == "string" ? fromString$3(e, n) : fromBits$3(e.low, e.high, typeof n == "boolean" ? n : e.unsigned);
-}
-Long$3.fromValue = fromValue$3;
-var TWO_PWR_16_DBL$3 = 65536, TWO_PWR_24_DBL$3 = 1 << 24, TWO_PWR_32_DBL$3 = TWO_PWR_16_DBL$3 * TWO_PWR_16_DBL$3, TWO_PWR_64_DBL$3 = TWO_PWR_32_DBL$3 * TWO_PWR_32_DBL$3, TWO_PWR_63_DBL$3 = TWO_PWR_64_DBL$3 / 2, TWO_PWR_24$3 = fromInt$3(TWO_PWR_24_DBL$3), ZERO$3 = fromInt$3(0);
-Long$3.ZERO = ZERO$3;
-var UZERO$3 = fromInt$3(0, !0);
-Long$3.UZERO = UZERO$3;
-var ONE$3 = fromInt$3(1);
-Long$3.ONE = ONE$3;
-var UONE$3 = fromInt$3(1, !0);
-Long$3.UONE = UONE$3;
-var NEG_ONE$3 = fromInt$3(-1);
-Long$3.NEG_ONE = NEG_ONE$3;
-var MAX_VALUE$3 = fromBits$3(-1, 2147483647, !1);
-Long$3.MAX_VALUE = MAX_VALUE$3;
-var MAX_UNSIGNED_VALUE$3 = fromBits$3(-1, -1, !0);
-Long$3.MAX_UNSIGNED_VALUE = MAX_UNSIGNED_VALUE$3;
-var MIN_VALUE$3 = fromBits$3(0, -2147483648, !1);
-Long$3.MIN_VALUE = MIN_VALUE$3;
-var LongPrototype$3 = Long$3.prototype;
-LongPrototype$3.toInt = function e() {
-  return this.unsigned ? this.low >>> 0 : this.low;
-};
-LongPrototype$3.toNumber = function e() {
-  return this.unsigned ? (this.high >>> 0) * TWO_PWR_32_DBL$3 + (this.low >>> 0) : this.high * TWO_PWR_32_DBL$3 + (this.low >>> 0);
-};
-LongPrototype$3.toString = function e(n) {
-  if (n = n || 10, n < 2 || 36 < n)
-    throw RangeError("radix");
-  if (this.isZero())
-    return "0";
-  if (this.isNegative())
-    if (this.eq(MIN_VALUE$3)) {
-      var o = fromNumber$3(n), d = this.div(o), u = d.mul(o).sub(this);
-      return d.toString(n) + u.toInt().toString(n);
-    } else
-      return "-" + this.neg().toString(n);
-  for (var c = fromNumber$3(pow_dbl$3(n, 6), this.unsigned), m = this, P = ""; ; ) {
-    var Q = m.div(c), F = m.sub(Q.mul(c)).toInt() >>> 0, J = F.toString(n);
-    if (m = Q, m.isZero())
-      return J + P;
-    for (; J.length < 6; )
-      J = "0" + J;
-    P = "" + J + P;
-  }
-};
-LongPrototype$3.getHighBits = function e() {
-  return this.high;
-};
-LongPrototype$3.getHighBitsUnsigned = function e() {
-  return this.high >>> 0;
-};
-LongPrototype$3.getLowBits = function e() {
-  return this.low;
-};
-LongPrototype$3.getLowBitsUnsigned = function e() {
-  return this.low >>> 0;
-};
-LongPrototype$3.getNumBitsAbs = function e() {
-  if (this.isNegative())
-    return this.eq(MIN_VALUE$3) ? 64 : this.neg().getNumBitsAbs();
-  for (var n = this.high != 0 ? this.high : this.low, o = 31; o > 0 && !(n & 1 << o); o--)
-    ;
-  return this.high != 0 ? o + 33 : o + 1;
-};
-LongPrototype$3.isZero = function e() {
-  return this.high === 0 && this.low === 0;
-};
-LongPrototype$3.eqz = LongPrototype$3.isZero;
-LongPrototype$3.isNegative = function e() {
-  return !this.unsigned && this.high < 0;
-};
-LongPrototype$3.isPositive = function e() {
-  return this.unsigned || this.high >= 0;
-};
-LongPrototype$3.isOdd = function e() {
-  return (this.low & 1) === 1;
-};
-LongPrototype$3.isEven = function e() {
-  return (this.low & 1) === 0;
-};
-LongPrototype$3.equals = function e(n) {
-  return isLong$3(n) || (n = fromValue$3(n)), this.unsigned !== n.unsigned && this.high >>> 31 === 1 && n.high >>> 31 === 1 ? !1 : this.high === n.high && this.low === n.low;
-};
-LongPrototype$3.eq = LongPrototype$3.equals;
-LongPrototype$3.notEquals = function e(n) {
-  return !this.eq(
-    /* validates */
-    n
-  );
-};
-LongPrototype$3.neq = LongPrototype$3.notEquals;
-LongPrototype$3.ne = LongPrototype$3.notEquals;
-LongPrototype$3.lessThan = function e(n) {
-  return this.comp(
-    /* validates */
-    n
-  ) < 0;
-};
-LongPrototype$3.lt = LongPrototype$3.lessThan;
-LongPrototype$3.lessThanOrEqual = function e(n) {
-  return this.comp(
-    /* validates */
-    n
-  ) <= 0;
-};
-LongPrototype$3.lte = LongPrototype$3.lessThanOrEqual;
-LongPrototype$3.le = LongPrototype$3.lessThanOrEqual;
-LongPrototype$3.greaterThan = function e(n) {
-  return this.comp(
-    /* validates */
-    n
-  ) > 0;
-};
-LongPrototype$3.gt = LongPrototype$3.greaterThan;
-LongPrototype$3.greaterThanOrEqual = function e(n) {
-  return this.comp(
-    /* validates */
-    n
-  ) >= 0;
-};
-LongPrototype$3.gte = LongPrototype$3.greaterThanOrEqual;
-LongPrototype$3.ge = LongPrototype$3.greaterThanOrEqual;
-LongPrototype$3.compare = function e(n) {
-  if (isLong$3(n) || (n = fromValue$3(n)), this.eq(n))
-    return 0;
-  var o = this.isNegative(), d = n.isNegative();
-  return o && !d ? -1 : !o && d ? 1 : this.unsigned ? n.high >>> 0 > this.high >>> 0 || n.high === this.high && n.low >>> 0 > this.low >>> 0 ? -1 : 1 : this.sub(n).isNegative() ? -1 : 1;
-};
-LongPrototype$3.comp = LongPrototype$3.compare;
-LongPrototype$3.negate = function e() {
-  return !this.unsigned && this.eq(MIN_VALUE$3) ? MIN_VALUE$3 : this.not().add(ONE$3);
-};
-LongPrototype$3.neg = LongPrototype$3.negate;
-LongPrototype$3.add = function e(n) {
-  isLong$3(n) || (n = fromValue$3(n));
-  var o = this.high >>> 16, d = this.high & 65535, u = this.low >>> 16, c = this.low & 65535, m = n.high >>> 16, P = n.high & 65535, Q = n.low >>> 16, F = n.low & 65535, J = 0, j = 0, U = 0, A = 0;
-  return A += c + F, U += A >>> 16, A &= 65535, U += u + Q, j += U >>> 16, U &= 65535, j += d + P, J += j >>> 16, j &= 65535, J += o + m, J &= 65535, fromBits$3(U << 16 | A, J << 16 | j, this.unsigned);
-};
-LongPrototype$3.subtract = function e(n) {
-  return isLong$3(n) || (n = fromValue$3(n)), this.add(n.neg());
-};
-LongPrototype$3.sub = LongPrototype$3.subtract;
-LongPrototype$3.multiply = function e(n) {
-  if (this.isZero())
-    return this;
-  if (isLong$3(n) || (n = fromValue$3(n)), wasm$3) {
-    var o = wasm$3.mul(
-      this.low,
-      this.high,
-      n.low,
-      n.high
-    );
-    return fromBits$3(o, wasm$3.get_high(), this.unsigned);
-  }
-  if (n.isZero())
-    return this.unsigned ? UZERO$3 : ZERO$3;
-  if (this.eq(MIN_VALUE$3))
-    return n.isOdd() ? MIN_VALUE$3 : ZERO$3;
-  if (n.eq(MIN_VALUE$3))
-    return this.isOdd() ? MIN_VALUE$3 : ZERO$3;
-  if (this.isNegative())
-    return n.isNegative() ? this.neg().mul(n.neg()) : this.neg().mul(n).neg();
-  if (n.isNegative())
-    return this.mul(n.neg()).neg();
-  if (this.lt(TWO_PWR_24$3) && n.lt(TWO_PWR_24$3))
-    return fromNumber$3(this.toNumber() * n.toNumber(), this.unsigned);
-  var d = this.high >>> 16, u = this.high & 65535, c = this.low >>> 16, m = this.low & 65535, P = n.high >>> 16, Q = n.high & 65535, F = n.low >>> 16, J = n.low & 65535, j = 0, U = 0, A = 0, L = 0;
-  return L += m * J, A += L >>> 16, L &= 65535, A += c * J, U += A >>> 16, A &= 65535, A += m * F, U += A >>> 16, A &= 65535, U += u * J, j += U >>> 16, U &= 65535, U += c * F, j += U >>> 16, U &= 65535, U += m * Q, j += U >>> 16, U &= 65535, j += d * J + u * F + c * Q + m * P, j &= 65535, fromBits$3(A << 16 | L, j << 16 | U, this.unsigned);
-};
-LongPrototype$3.mul = LongPrototype$3.multiply;
-LongPrototype$3.divide = function e(n) {
-  if (isLong$3(n) || (n = fromValue$3(n)), n.isZero())
-    throw Error("division by zero");
-  if (wasm$3) {
-    if (!this.unsigned && this.high === -2147483648 && n.low === -1 && n.high === -1)
-      return this;
-    var o = (this.unsigned ? wasm$3.div_u : wasm$3.div_s)(
-      this.low,
-      this.high,
-      n.low,
-      n.high
-    );
-    return fromBits$3(o, wasm$3.get_high(), this.unsigned);
-  }
-  if (this.isZero())
-    return this.unsigned ? UZERO$3 : ZERO$3;
-  var d, u, c;
-  if (this.unsigned) {
-    if (n.unsigned || (n = n.toUnsigned()), n.gt(this))
-      return UZERO$3;
-    if (n.gt(this.shru(1)))
-      return UONE$3;
-    c = UZERO$3;
-  } else {
-    if (this.eq(MIN_VALUE$3)) {
-      if (n.eq(ONE$3) || n.eq(NEG_ONE$3))
-        return MIN_VALUE$3;
-      if (n.eq(MIN_VALUE$3))
-        return ONE$3;
-      var m = this.shr(1);
-      return d = m.div(n).shl(1), d.eq(ZERO$3) ? n.isNegative() ? ONE$3 : NEG_ONE$3 : (u = this.sub(n.mul(d)), c = d.add(u.div(n)), c);
-    } else if (n.eq(MIN_VALUE$3))
-      return this.unsigned ? UZERO$3 : ZERO$3;
-    if (this.isNegative())
-      return n.isNegative() ? this.neg().div(n.neg()) : this.neg().div(n).neg();
-    if (n.isNegative())
-      return this.div(n.neg()).neg();
-    c = ZERO$3;
-  }
-  for (u = this; u.gte(n); ) {
-    d = Math.max(1, Math.floor(u.toNumber() / n.toNumber()));
-    for (var P = Math.ceil(Math.log(d) / Math.LN2), Q = P <= 48 ? 1 : pow_dbl$3(2, P - 48), F = fromNumber$3(d), J = F.mul(n); J.isNegative() || J.gt(u); )
-      d -= Q, F = fromNumber$3(d, this.unsigned), J = F.mul(n);
-    F.isZero() && (F = ONE$3), c = c.add(F), u = u.sub(J);
-  }
-  return c;
-};
-LongPrototype$3.div = LongPrototype$3.divide;
-LongPrototype$3.modulo = function e(n) {
-  if (isLong$3(n) || (n = fromValue$3(n)), wasm$3) {
-    var o = (this.unsigned ? wasm$3.rem_u : wasm$3.rem_s)(
-      this.low,
-      this.high,
-      n.low,
-      n.high
-    );
-    return fromBits$3(o, wasm$3.get_high(), this.unsigned);
-  }
-  return this.sub(this.div(n).mul(n));
-};
-LongPrototype$3.mod = LongPrototype$3.modulo;
-LongPrototype$3.rem = LongPrototype$3.modulo;
-LongPrototype$3.not = function e() {
-  return fromBits$3(~this.low, ~this.high, this.unsigned);
-};
-LongPrototype$3.countLeadingZeros = function e() {
-  return this.high ? Math.clz32(this.high) : Math.clz32(this.low) + 32;
-};
-LongPrototype$3.clz = LongPrototype$3.countLeadingZeros;
-LongPrototype$3.countTrailingZeros = function e() {
-  return this.low ? ctz32(this.low) : ctz32(this.high) + 32;
-};
-LongPrototype$3.ctz = LongPrototype$3.countTrailingZeros;
-LongPrototype$3.and = function e(n) {
-  return isLong$3(n) || (n = fromValue$3(n)), fromBits$3(this.low & n.low, this.high & n.high, this.unsigned);
-};
-LongPrototype$3.or = function e(n) {
-  return isLong$3(n) || (n = fromValue$3(n)), fromBits$3(this.low | n.low, this.high | n.high, this.unsigned);
-};
-LongPrototype$3.xor = function e(n) {
-  return isLong$3(n) || (n = fromValue$3(n)), fromBits$3(this.low ^ n.low, this.high ^ n.high, this.unsigned);
-};
-LongPrototype$3.shiftLeft = function e(n) {
-  return isLong$3(n) && (n = n.toInt()), (n &= 63) === 0 ? this : n < 32 ? fromBits$3(this.low << n, this.high << n | this.low >>> 32 - n, this.unsigned) : fromBits$3(0, this.low << n - 32, this.unsigned);
-};
-LongPrototype$3.shl = LongPrototype$3.shiftLeft;
-LongPrototype$3.shiftRight = function e(n) {
-  return isLong$3(n) && (n = n.toInt()), (n &= 63) === 0 ? this : n < 32 ? fromBits$3(this.low >>> n | this.high << 32 - n, this.high >> n, this.unsigned) : fromBits$3(this.high >> n - 32, this.high >= 0 ? 0 : -1, this.unsigned);
-};
-LongPrototype$3.shr = LongPrototype$3.shiftRight;
-LongPrototype$3.shiftRightUnsigned = function e(n) {
-  return isLong$3(n) && (n = n.toInt()), (n &= 63) === 0 ? this : n < 32 ? fromBits$3(this.low >>> n | this.high << 32 - n, this.high >>> n, this.unsigned) : n === 32 ? fromBits$3(this.high, 0, this.unsigned) : fromBits$3(this.high >>> n - 32, 0, this.unsigned);
-};
-LongPrototype$3.shru = LongPrototype$3.shiftRightUnsigned;
-LongPrototype$3.shr_u = LongPrototype$3.shiftRightUnsigned;
-LongPrototype$3.rotateLeft = function e(n) {
-  var o;
-  return isLong$3(n) && (n = n.toInt()), (n &= 63) === 0 ? this : n === 32 ? fromBits$3(this.high, this.low, this.unsigned) : n < 32 ? (o = 32 - n, fromBits$3(this.low << n | this.high >>> o, this.high << n | this.low >>> o, this.unsigned)) : (n -= 32, o = 32 - n, fromBits$3(this.high << n | this.low >>> o, this.low << n | this.high >>> o, this.unsigned));
-};
-LongPrototype$3.rotl = LongPrototype$3.rotateLeft;
-LongPrototype$3.rotateRight = function e(n) {
-  var o;
-  return isLong$3(n) && (n = n.toInt()), (n &= 63) === 0 ? this : n === 32 ? fromBits$3(this.high, this.low, this.unsigned) : n < 32 ? (o = 32 - n, fromBits$3(this.high << o | this.low >>> n, this.low << o | this.high >>> n, this.unsigned)) : (n -= 32, o = 32 - n, fromBits$3(this.low << o | this.high >>> n, this.high << o | this.low >>> n, this.unsigned));
-};
-LongPrototype$3.rotr = LongPrototype$3.rotateRight;
-LongPrototype$3.toSigned = function e() {
-  return this.unsigned ? fromBits$3(this.low, this.high, !1) : this;
-};
-LongPrototype$3.toUnsigned = function e() {
-  return this.unsigned ? this : fromBits$3(this.low, this.high, !0);
-};
-LongPrototype$3.toBytes = function e(n) {
-  return n ? this.toBytesLE() : this.toBytesBE();
-};
-LongPrototype$3.toBytesLE = function e() {
-  var n = this.high, o = this.low;
-  return [
-    o & 255,
-    o >>> 8 & 255,
-    o >>> 16 & 255,
-    o >>> 24,
-    n & 255,
-    n >>> 8 & 255,
-    n >>> 16 & 255,
-    n >>> 24
-  ];
-};
-LongPrototype$3.toBytesBE = function e() {
-  var n = this.high, o = this.low;
-  return [
-    n >>> 24,
-    n >>> 16 & 255,
-    n >>> 8 & 255,
-    n & 255,
-    o >>> 24,
-    o >>> 16 & 255,
-    o >>> 8 & 255,
-    o & 255
-  ];
-};
-Long$3.fromBytes = function e(n, o, d) {
-  return d ? Long$3.fromBytesLE(n, o) : Long$3.fromBytesBE(n, o);
-};
-Long$3.fromBytesLE = function e(n, o) {
-  return new Long$3(
-    n[0] | n[1] << 8 | n[2] << 16 | n[3] << 24,
-    n[4] | n[5] << 8 | n[6] << 16 | n[7] << 24,
-    o
-  );
-};
-Long$3.fromBytesBE = function e(n, o) {
-  return new Long$3(
-    n[4] << 24 | n[5] << 16 | n[6] << 8 | n[7],
-    n[0] << 24 | n[1] << 16 | n[2] << 8 | n[3],
-    o
-  );
-};
-const long$3 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty({
-  __proto__: null,
-  default: Long$3
-}, Symbol.toStringTag, { value: "Module" }));
 var dist = {}, snap = {}, isNumeric = /^-?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i, mathceil = Math.ceil, mathfloor = Math.floor, bignumberError = "[BigNumber Error] ", tooManyDigits = bignumberError + "Number primitive has more than 15 significant digits: ", BASE = 1e14, LOG_BASE = 14, MAX_SAFE_INTEGER = 9007199254740991, POWS_TEN = [1, 10, 100, 1e3, 1e4, 1e5, 1e6, 1e7, 1e8, 1e9, 1e10, 1e11, 1e12, 1e13], SQRT_BASE = 1e7, MAX = 1e9;
 function clone(e) {
   var n, o, d, u = $.prototype = { constructor: $, toString: null, valueOf: null }, c = new $(1), m = 20, P = 4, Q = -7, F = 21, J = -1e7, j = 1e7, U = !1, A = 1, L = 0, I = {
@@ -287226,7 +287233,7 @@ const _334 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty
     },
     osmosis: {
       concentratedliquidity: {
-        v1beta1: new (await import("./query.lcd-52d93635.js")).LCDQueryClient({
+        v1beta1: new (await import("./query.lcd-fb12a995.js")).LCDQueryClient({
           requestClient: n
         })
       },
@@ -287351,7 +287358,7 @@ const _334 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty
     },
     osmosis: {
       concentratedliquidity: {
-        v1beta1: (await import("./query.rpc.Query-f5f9c639.js")).createRpcQueryExtension(o)
+        v1beta1: (await import("./query.rpc.Query-1d99f609.js")).createRpcQueryExtension(o)
       },
       cosmwasmpool: {
         v1beta1: (await Promise.resolve().then(() => _307)).createRpcQueryExtension(o)
@@ -287427,7 +287434,7 @@ const _334 = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty
   },
   osmosis: {
     concentratedliquidity: {
-      v1beta1: new (await import("./tx.rpc.msg-12ba9b05.js")).MsgClientImpl(e)
+      v1beta1: new (await import("./tx.rpc.msg-ba4db3b3.js")).MsgClientImpl(e)
     },
     gamm: {
       poolmodels: {
