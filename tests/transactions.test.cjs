@@ -90,6 +90,12 @@ test('REST account parsing keeps new and legacy account numbers and zero sequenc
     }
     response = { code: 5, message: 'account not found' };
     await assert.rejects(getAccount(endpoint, 'missing'), /Invalid/);
+    for (const accountNumber of ['-1', '18446744073709551616', '1e18', Number('14353137888589996058')]) {
+      response = { account: { account_number: accountNumber, sequence: '0' } };
+      await assert.rejects(getAccount(endpoint, 'invalid'), /Invalid|Unsafe/);
+    }
+    response = { account: { account_number: '14353137888589996058' } };
+    await assert.rejects(getAccount(endpoint, 'missing-sequence'), /Invalid/);
     assert.throws(() => uint64('18446744073709551616'), /Invalid/);
   } finally { await new Promise(resolve => server.close(resolve)); }
 });
